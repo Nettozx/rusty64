@@ -1,0 +1,6 @@
+[package]
+name = "rusty64"
+version = "0.1.0"
+authors = ["Nettozx <nettomajid@gmail.com>"]
+
+[dependencies]
