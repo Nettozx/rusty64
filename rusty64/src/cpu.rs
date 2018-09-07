@@ -2,6 +2,7 @@ use super::interconnect;
 
 const NUM_GPR: usize = 32; //number of general purpose registers
 
+#[derive(Debug)]
 pub struct Cpu {
     //section 1.4.2 CPU Registers on datasheet
     reg_gpr: [u64; NUM_GPR],
@@ -44,9 +45,28 @@ impl Cpu {
     }
     pub fn run(&mut self) {
         loop {
-            let opcode = self.read_word(self.reg_pc);
-            panic!("Opcode: {:#x}", opcode);
+            self.run_instruction();
         }
+    }
+
+    pub fn run_instruction(&mut self) {
+        let instruction = self.read_word(self.reg_pc);
+
+        //TODO check endian
+        let opcode = (instruction >> 26) & 0b111111;
+        //section 16.6 of datasheet
+        match opcode {
+            0b00_1111 => {
+                //LUI page 456
+                println!("LUI!");
+                let imm = instruction & 0xffff;
+                let rt = (instruction >> 16) & 0b11111;
+                self.write_reg_gpr(rt as usize, (imm << 16) as u64 );
+            },
+            _ => panic!("Unrecognized instruction: {:#x}", instruction)
+        }
+
+        self.reg_pc += 4;
     }
 
     fn read_word(&self, virt_addr: u64) -> u32 {
@@ -66,8 +86,15 @@ impl Cpu {
             panic!("Unrecognized virtual address: {:#x}", virt_addr);
         }
     }
+
+    fn write_reg_gpr(&mut self, index: usize, value: u64) {
+        if index != 0 {
+            self.reg_gpr[index] = value;
+        }
+    }
 }
 
+#[derive(Debug)]
 enum RegConfigEp { //page153 on datasheet
     D,
     DxxDxx,
@@ -80,6 +107,7 @@ impl Default for RegConfigEp {
     }
 }
 
+#[derive(Debug)]
 enum RegConfigBe { //section 5.4.6
 LittleEndian,
     BigEndian
@@ -91,7 +119,7 @@ impl Default for RegConfigBe {
     }
 }
 
-#[derive(Default)]
+#[derive(Default, Debug)]
 struct RegConfig {
     reg_config_ep: RegConfigEp,
     reg_config_be: RegConfigBe
@@ -104,7 +132,7 @@ impl RegConfig {
     }
 }
 
-#[derive(Default)]
+#[derive(Default, Debug)]
 struct Cp0 {
     //page 46 on datasheet & chapter 5
     reg_config: RegConfig

@@ -1,3 +1,5 @@
+use std::fmt;
+
 const PIF_ROM_SIZE: usize = 2048;
 
 //RAM on N64 is 4MB RDRAM with 9bit bus
@@ -30,5 +32,11 @@ impl Interconnect {
             //TODO
             panic!("Unrecognized address: {:#x}", addr);
         }
+    }
+}
+
+impl fmt::Debug for Interconnect {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "TODO: Impl Debug for Interconnect")
     }
 }
