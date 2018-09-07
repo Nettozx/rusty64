@@ -1,9 +1,10 @@
 use super::super::interconnect;
-use super::cp0::cp0;
+use super::cp0;
+
+use std::fmt;
 
 const NUM_GPR: usize = 32; //number of general purpose registers
 
-#[derive(Debug)]
 pub struct Cpu {
     //section 1.4.2 CPU Registers on datasheet
     reg_gpr: [u64; NUM_GPR],
@@ -22,6 +23,63 @@ pub struct Cpu {
     cp0: cp0::Cp0,
 
     interconnect: interconnect::Interconnect
+}
+
+impl fmt::Debug for Cpu {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        const REGS_PER_LINE: usize = 2;
+        const REG_NAMES: [&'static str; NUM_GPR] = [
+            "r0", "at", "v0", "v1", "a0", "a1", "a2", "a3",
+            "t0", "t1", "t2", "t3", "t4", "t5", "t6", "t7",
+            "s0", "s1", "s2", "s3", "s4", "s5", "s6", "s7",
+            "t8", "t9", "k0", "k1", "gp", "sp", "s8", "ra",
+        ];
+
+        write!(f, "\nCPU General Purpose Registers:")?;
+        for reg_num in 0..NUM_GPR {
+            if (reg_num % REGS_PER_LINE) == 0 {
+                writeln!(f, "")?;
+            }
+            write!(f, "{reg_name}/gpr{num:02}: {value:#018X} ",
+                   num = reg_num,
+                   reg_name = REG_NAMES[reg_num],
+                   value = self.reg_gpr[reg_num],
+            )?;
+        }
+
+        write!(f, "\n\nCPU Floating Point Registers:")?;
+        for reg_num in 0..NUM_GPR {
+            if (reg_num % REGS_PER_LINE) == 0 {
+                writeln!(f, "")?;
+            }
+            write!(f,
+                   "fpr{num:02}: {value:21} ",
+                   num = reg_num,
+                   value = self.reg_fpr[reg_num],
+            )?;
+        }
+
+        writeln!(f, "\n\nCPU Special Registers:")?;
+        writeln!(f,
+                 "\
+            reg_pc: {:#018X}\n\
+            reg_hi: {:#018X}\n\
+            reg_lo: {:#018X}\n\
+            reg_llbit: {}\n\
+            reg_fcr0: {:#010X}\n\
+            reg_fcr31: {:#010X}\n\
+            ",
+                 self.reg_pc,
+                 self.reg_hi,
+                 self.reg_lo,
+                 self.reg_llbit,
+                 self.reg_fcr0,
+                 self.reg_fcr31
+        )?;
+
+        writeln!(f, "{:#?}", self.cp0)?;
+        writeln!(f, "{:#?}", self.interconnect)
+    }
 }
 
 impl Cpu {
@@ -83,7 +141,8 @@ impl Cpu {
                 let offset = imm;
                 //sign extend for upper 32 bits
                 let sign_extended_offset = (offset as i16) as u64;
-                let virt_addr = sign_extended_offset + self.read_reg_gpr(base as usize);
+                let virt_addr =
+                    self.read_reg_gpr(base as usize).wrapping_add(sign_extended_offset);
                 let mem = (self.read_word(virt_addr) as i32) as u64;
                 self.write_reg_gpr(rt as usize, mem);
             }
