@@ -1,4 +1,6 @@
+mod n64;
 mod cpu;
+mod interconnect;
 
 use std::env;
 use std::fs;
@@ -48,11 +50,9 @@ fn main() {
     let pif = read_bin(pif_file_name);
     let rom = read_bin(rom_file_name);
 
-    //define cpu
-    let mut cpu = cpu::Cpu::default();
-    //reset cpu
-    cpu.power_on_reset();
-    println!("{:#?}", &cpu);
+    let mut n64 = n64::N64::new(pif);
+    n64.power_on_reset();
+    n64.run();
 }
 
 fn read_bin<P: AsRef<Path>>(path: P) -> Vec<u8> {

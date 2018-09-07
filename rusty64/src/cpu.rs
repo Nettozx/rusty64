@@ -1,6 +1,7 @@
+use super::interconnect;
+
 const NUM_GPR: usize = 32; //number of general purpose registers
 
-#[derive(Default, Debug)]
 pub struct Cpu {
     //section 1.4.2 CPU Registers on datasheet
     reg_gpr: [u64; NUM_GPR],
@@ -17,15 +18,33 @@ pub struct Cpu {
     reg_fcr31: u32,
 
     cp0: Cp0,
+
+    interconnect: interconnect::Interconnect
 }
 
 impl Cpu {
+    pub fn new(interconnect: interconnect::Interconnect) -> Cpu {
+        Cpu {
+            reg_gpr: [0; NUM_GPR],
+            reg_fpr: [0.0; NUM_GPR],
+            reg_pc: 0,
+            reg_hi: 0,
+            reg_lo: 0,
+            reg_llbit: false,
+            reg_fcr0: 0,
+            reg_fcr31: 0,
+            cp0: Cp0::default(),
+            interconnect,
+        }
+    }
     pub fn power_on_reset(&mut self) {
         self.cp0.power_on_reset();
     }
+    pub fn run(&mut self) {
+        //TODO
+    }
 }
 
-#[derive(Debug)]
 enum RegConfigEp { //page153 on datasheet
 D,
     DxxDxx,
@@ -38,7 +57,6 @@ impl Default for RegConfigEp {
     }
 }
 
-#[derive(Debug)]
 enum RegConfigBe { //section 5.4.6
 LittleEndian,
     BigEndian
@@ -50,7 +68,7 @@ impl Default for RegConfigBe {
     }
 }
 
-#[derive(Default, Debug)]
+#[derive(Default)]
 struct RegConfig {
     reg_config_ep: RegConfigEp,
     reg_config_be: RegConfigBe
@@ -63,7 +81,7 @@ impl RegConfig {
     }
 }
 
-#[derive(Default, Debug)]
+#[derive(Default)]
 struct Cp0 {
     //page 46 on datasheet & chapter 5
     reg_config: RegConfig
