@@ -1,6 +1,8 @@
 [package]
 name = "rusty64"
 version = "0.1.0"
-authors = ["Nettozx <nettomajid@gmail.com>"]
+authors = ["Nettozx <umajid@uci.edu>"]
+license = "MIT/Apache-2.0"
 
 [dependencies]
+byteorder = "1.2.6"

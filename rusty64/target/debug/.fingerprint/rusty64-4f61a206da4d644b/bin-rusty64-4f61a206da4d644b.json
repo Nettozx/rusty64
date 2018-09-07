@@ -1,0 +1,1 @@
+{"rustc":8053191651074079641,"features":"[]","target":14226394773765741621,"profile":5562419237683133860,"path":1036222786711178230,"deps":[["byteorder v1.2.6","byteorder",5254467453509512974]],"local":[{"MtimeBased":[[1536307103,645049000],".fingerprint\\rusty64-4f61a206da4d644b\\dep-bin-rusty64-4f61a206da4d644b"]}],"rustflags":[],"edition":"Edition2015"}
