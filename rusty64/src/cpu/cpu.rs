@@ -55,12 +55,18 @@ impl Cpu {
 
         //TODO check endian
         let opcode = (instruction >> 26) & 0b111111;
+        let rs = (instruction >> 21) & 0b11111;
         let rt = (instruction >> 16) & 0b11111;
+        let imm = instruction & 0xffff;
         //section 16.6 of datasheet
         match opcode {
+            0b00_1101 => {
+                //ORI page 485
+                let res = self.read_reg_gpr(rs as usize) | (imm as u64);
+                self.write_reg_gpr(rt as usize, res);
+            },
             0b00_1111 => {
                 //LUI page 456
-                let imm = instruction & 0xffff;
                 //TODO sign extend for upper 32 bits
                 self.write_reg_gpr(rt as usize, (imm << 16) as u64 );
             },
