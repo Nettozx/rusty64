@@ -67,8 +67,9 @@ impl Cpu {
             },
             0b00_1111 => {
                 //LUI page 456
-                //TODO sign extend for upper 32 bits
-                self.write_reg_gpr(rt as usize, (imm << 16) as u64 );
+                //sign extend for upper 32 bits
+                let value = ((imm << 16) as i32) as u64;
+                self.write_reg_gpr(rt as usize, value );
             },
             0b01_0000 => {
                 //MTC0 page 474
@@ -76,6 +77,16 @@ impl Cpu {
                 let data = self.read_reg_gpr(rt as usize);
                 self.cp0.write_reg(rd, data);
             },
+            0b10_0011 => {
+                //LW page 458
+                let base = rs;
+                let offset = imm;
+                //sign extend for upper 32 bits
+                let sign_extended_offset = (offset as i16) as u64;
+                let virt_addr = sign_extended_offset + self.read_reg_gpr(base as usize);
+                let mem = (self.read_word(virt_addr) as i32) as u64;
+                self.write_reg_gpr(rt as usize, mem);
+            }
             _ => panic!("Unrecognized instruction: {:#x}", instruction)
         }
 
