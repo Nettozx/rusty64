@@ -1,5 +1,7 @@
 use super::super::interconnect;
 use super::cp0;
+use super::opcode::Opcode::*;
+use super::instruction::Instruction;
 
 use std::fmt;
 
@@ -109,61 +111,52 @@ impl Cpu {
     }
 
     pub fn run_instruction(&mut self) {
-        let instruction = self.read_word(self.reg_pc);
+        let instr = Instruction(self.read_word(self.reg_pc));
 
-        //TODO check endian
-        let opcode = (instruction >> 26) & 0b111111;
-        let rs = (instruction >> 21) & 0b11111;
-        let rt = (instruction >> 16) & 0b11111;
-        let imm = instruction & 0xffff;
         //section 16.6 of datasheet
-        match opcode {
-            0b00_1100 => {
+        match instr.opcode() {
+            ANDI => {
                 //ANDI page 376
-                let res = self.read_reg_gpr(rs as usize) & (imm as u64);
-                self.write_reg_gpr(rt as usize, res);
+                let res = self.read_reg_gpr(instr.rs() as usize) & (instr.imm() as u64);
+                self.write_reg_gpr(instr.rt() as usize, res);
             },
-            0b00_1101 => {
+            ORI => {
                 //ORI page 485
-                let res = self.read_reg_gpr(rs as usize) | (imm as u64);
-                self.write_reg_gpr(rt as usize, res);
+                let res = self.read_reg_gpr(instr.rs() as usize) | (instr.imm() as u64);
+                self.write_reg_gpr(instr.rt() as usize, res);
             },
-            0b00_1111 => {
+            LUI => {
                 //LUI page 456
                 //sign extend for upper 32 bits
-                let value = ((imm << 16) as i32) as u64;
-                self.write_reg_gpr(rt as usize, value );
+                let value = ((instr.imm() << 16) as i32) as u64;
+                self.write_reg_gpr(instr.rt() as usize, value );
             },
-            0b01_0000 => {
+            MTC0 => {
                 //MTC0 page 474
-                let rd = (instruction >> 11) & 0b11111;
-                let data = self.read_reg_gpr(rt as usize);
-                self.cp0.write_reg(rd, data);
+                let data = self.read_reg_gpr(instr.rt() as usize);
+                self.cp0.write_reg(instr.rd(), data);
             },
-            0b01_0100 => {
+            BEQL => {
                 //BEQL, BEQZL is the same but with zero filled in already
-                let offset = imm;
-                if self.read_reg_gpr(rs as usize) ==
-                    self.read_reg_gpr(rt as usize){
-                    let sign_extended_offset = ((offset as i16) as u64).wrapping_shl(2);
+                if self.read_reg_gpr(instr.rs() as usize) ==
+                    self.read_reg_gpr(instr.rt() as usize){
+                    let sign_extended_offset = ((instr.offset() as i16) as u64).wrapping_shl(2);
                     self.reg_pc = self.reg_pc.wrapping_add(sign_extended_offset);
                     //TODO make this safer cause it can stack overflow
                     self.run_instruction();
                 }
 
             },
-            0b10_0011 => {
+            LW => {
                 //LW page 458
-                let base = rs;
-                let offset = imm;
+                let base = instr.rs();
                 //sign extend for upper 32 bits
-                let sign_extended_offset = (offset as i16) as u64;
+                let sign_extended_offset = (instr.offset() as i16) as u64;
                 let virt_addr =
                     self.read_reg_gpr(base as usize).wrapping_add(sign_extended_offset);
                 let mem = (self.read_word(virt_addr) as i32) as u64;
-                self.write_reg_gpr(rt as usize, mem);
-            },
-            _ => panic!("Unrecognized instruction: {:#x}", instruction)
+                self.write_reg_gpr(instr.rt() as usize, mem);
+            }
         }
 
         self.reg_pc += 4;
