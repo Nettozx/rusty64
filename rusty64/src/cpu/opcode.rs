@@ -9,5 +9,6 @@ enum_from_primitive! {
         MTC0  = 0b01_0000,
         BEQL  = 0b01_0100,
         LW    = 0b10_0011,
+        SW    = 0b10_1011,
     }
 }

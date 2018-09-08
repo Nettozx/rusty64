@@ -128,6 +128,17 @@ impl Cpu {
                     self.read_reg_gpr(base as usize).wrapping_add(sign_extended_offset);
                 let mem = (self.read_word(virt_addr) as i32) as u64;
                 self.write_reg_gpr(instr.rt(), mem);
+            },
+            SW => {
+                //SW page 515
+                let base = instr.rs();
+                //sign extend for upper 32 bits
+                let sign_extended_offset = instr.imm_sign_extended();
+                let virt_addr =
+                    self.read_reg_gpr(base as usize).wrapping_add(sign_extended_offset);
+                let mem = self.read_reg_gpr(instr.rt()) as u32;
+                self.write_word(virt_addr, mem);
+                let mem = (self.read_word(virt_addr) as i32) as u64;
             }
         }
     }
@@ -135,6 +146,11 @@ impl Cpu {
     fn read_word(&self, virt_addr: u64) -> u32 {
         let phys_addr = self.virt_addr_to_phys_addr(virt_addr);
         self.interconnect.read_word(phys_addr as u32)
+    }
+
+    fn write_word(&mut self, virt_addr: u64, value: u32) {
+        let phys_addr = self.virt_addr_to_phys_addr(virt_addr);
+        self.interconnect.write_word(phys_addr as u32, value)
     }
 
     fn virt_addr_to_phys_addr(&self, virt_addr: u64) -> u64 {
