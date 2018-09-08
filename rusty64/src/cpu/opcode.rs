@@ -1,4 +1,5 @@
 enum_from_primitive! {
+    #[derive(Debug)]
     pub enum Opcode {
         ANDI = 0b00_1100,
         ORI  = 0b00_1101,

@@ -113,6 +113,11 @@ impl Cpu {
     pub fn run_instruction(&mut self) {
         let instr = Instruction(self.read_word(self.reg_pc));
 
+        println!("reg_pc: {:#018X}: {:?}", self.reg_pc, instr);
+
+        //increment prog counter
+        self.reg_pc += 4;
+
         //section 16.6 of datasheet
         match instr.opcode() {
             ANDI => {
@@ -158,8 +163,6 @@ impl Cpu {
                 self.write_reg_gpr(instr.rt() as usize, mem);
             }
         }
-
-        self.reg_pc += 4;
     }
 
     fn read_word(&self, virt_addr: u64) -> u32 {
