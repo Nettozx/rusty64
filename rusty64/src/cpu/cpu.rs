@@ -104,11 +104,11 @@ impl Cpu {
             },
             BEQL => {
                 //BEQL, BEQZL is the same but with zero filled in already - page 386
-                self.branch(&instr, |rs, rt| rs == rt)
+                self.branch(instr, |rs, rt| rs == rt)
             },
             BNEL => {
                 //BNEL, BNEZL is the same but with zero filled in already - page 400
-                self.branch(&instr, |rs, rt| rs != rt)
+                self.branch(instr, |rs, rt| rs != rt)
             },
             LW => {
                 //LW page 458
@@ -135,8 +135,7 @@ impl Cpu {
     }
 
     //branch lambda expression
-    #[inline(always)]
-    fn branch<F>(&mut self, instr: &Instruction, f: F) where F: FnOnce(u64, u64) -> bool {
+    fn branch<F>(&mut self, instr: Instruction, f: F) where F: FnOnce(u64, u64) -> bool {
         let rs = self.read_reg_gpr(instr.rs());
         let rt = self.read_reg_gpr(instr.rt());
         if f(rs, rt) {

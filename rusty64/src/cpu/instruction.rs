@@ -2,6 +2,7 @@ use super::opcode::Opcode;
 use std::fmt;
 use num::FromPrimitive;
 
+#[derive(Clone, Copy)]
 pub struct Instruction(pub u32);
 
 impl Instruction {
