@@ -37,7 +37,7 @@
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
-          <entry key="rs" value="16776" />
+          <entry key="rs" value="17131" />
           <entry key="toml" value="54" />
         </counts>
       </usages-collector>
@@ -45,7 +45,7 @@
         <counts>
           <entry key="Android RenderScript" value="82" />
           <entry key="PLAIN_TEXT" value="52" />
-          <entry key="Rust" value="16694" />
+          <entry key="Rust" value="17049" />
           <entry key="TOML file" value="2" />
         </counts>
       </usages-collector>
@@ -94,8 +94,8 @@
           <file pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/src/cpu/instruction.rs">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="433">
-                  <caret line="43" column="5" selection-start-line="43" selection-start-column="5" selection-end-line="43" selection-end-column="5" />
+                <state relative-caret-position="450">
+                  <caret line="44" column="1" selection-start-line="44" selection-start-column="1" selection-end-line="44" selection-end-column="1" />
                   <folding>
                     <element signature="e#845#846#0" expanded="true" />
                     <element signature="e#875#876#0" expanded="true" />
@@ -120,8 +120,12 @@
           <file pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/src/cpu/cpu.rs">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="221">
-                  <caret line="117" column="32" selection-start-line="117" selection-start-column="32" selection-end-line="117" selection-end-column="32" />
+                <state relative-caret-position="322">
+                  <caret line="162" column="61" selection-start-line="162" selection-start-column="61" selection-end-line="162" selection-end-column="61" />
+                  <folding>
+                    <element signature="e#3380#3381#0" expanded="true" />
+                    <element signature="e#3428#3429#0" expanded="true" />
+                  </folding>
                 </state>
               </provider>
             </entry>
@@ -288,12 +292,12 @@
       <workItem from="1536274118824" duration="383000" />
       <workItem from="1536274517712" duration="37285000" />
       <workItem from="1536344712640" duration="22843000" />
-      <workItem from="1536373039784" duration="2373000" />
+      <workItem from="1536373039784" duration="4119000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="62884000" />
+    <option name="totallyTimeSpent" value="64630000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-1207" y="0" width="1211" height="1887" extended-state="0" />
@@ -424,8 +428,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/cpu/instruction.rs">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="433">
-          <caret line="43" column="5" selection-start-line="43" selection-start-column="5" selection-end-line="43" selection-end-column="5" />
+        <state relative-caret-position="450">
+          <caret line="44" column="1" selection-start-line="44" selection-start-column="1" selection-end-line="44" selection-end-column="1" />
           <folding>
             <element signature="e#845#846#0" expanded="true" />
             <element signature="e#875#876#0" expanded="true" />
@@ -435,8 +439,12 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/cpu/cpu.rs">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="221">
-          <caret line="117" column="32" selection-start-line="117" selection-start-column="32" selection-end-line="117" selection-end-column="32" />
+        <state relative-caret-position="322">
+          <caret line="162" column="61" selection-start-line="162" selection-start-column="61" selection-end-line="162" selection-end-column="61" />
+          <folding>
+            <element signature="e#3380#3381#0" expanded="true" />
+            <element signature="e#3428#3429#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

@@ -111,13 +111,21 @@ impl Cpu {
     }
 
     pub fn run_instruction(&mut self) {
-        let instr = Instruction(self.read_word(self.reg_pc));
+        let instr = self.read_instruction(self.reg_pc);
 
         println!("reg_pc: {:#018X}: {:?}", self.reg_pc, instr);
 
         //increment prog counter
         self.reg_pc += 4;
+        //execute the instruction
+        self.execute_instruction(instr);
+    }
 
+    fn read_instruction(&self, addr: u64) -> Instruction {
+        Instruction(self.read_word(addr))
+    }
+
+    fn execute_instruction(&mut self, instr: Instruction) {
         //section 16.6 of datasheet
         match instr.opcode() {
             ANDI => {
@@ -145,10 +153,14 @@ impl Cpu {
                 //BEQL, BEQZL is the same but with zero filled in already
                 if self.read_reg_gpr(instr.rs() as usize) ==
                     self.read_reg_gpr(instr.rt() as usize){
+                    //get the old program counter cause it needs delay slot
+                    let old_pc = self.reg_pc;
+
                     let sign_extended_offset = ((instr.offset() as i16) as u64).wrapping_shl(2);
                     self.reg_pc = self.reg_pc.wrapping_add(sign_extended_offset);
                     //TODO make this safer cause it can stack overflow
-                    self.run_instruction();
+                    let delay_slot_instr = self.read_instruction(old_pc);
+                    self.execute_instruction(delay_slot_instr);
                 }
 
             },
