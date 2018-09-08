@@ -21,7 +21,7 @@ pub struct Interconnect {
 impl Interconnect {
     pub fn new(pif_rom: Box<[u8]>) -> Interconnect {
         Interconnect {
-            rsp: Rsp::default(),
+            rsp: Rsp::new(),
             pif_rom,
             ram: vec![0; RAM_SIZE].into_boxed_slice(),
         }

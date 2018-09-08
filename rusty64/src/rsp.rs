@@ -1,12 +1,41 @@
-#[derive(Default, Debug)]
-pub struct Rsp;
+pub struct Rsp {
+    halt: bool,
+    broke: bool,
+    interrupt_enable: bool,
+}
 
 impl Rsp {
+    pub fn new() -> Rsp {
+        //TODO check for correct initialization for hardware state
+        Rsp {
+            halt: true,
+            broke: false,
+            interrupt_enable: false,
+        }
+    }
     pub fn read_status_reg(&self) -> u32 {
-        1//TODO
+        (if self.halt {1} else {0} << 0) |
+            (if self.interrupt_enable {1} else {0} << 1)
     }
 
     pub fn write_status_reg(&mut self, value: u32) {
-        panic!("Writes to RSP status reg not yet supported: {:#018X}", value);
+        //TODO incomplete
+        if (value & (1 << 0)) != 0 {
+            self.halt = false;
+        }
+        if (value & (1 << 1)) != 0 {
+            self.halt = true;
+        }
+
+        if (value & (1 << 2)) != 0 {
+            self.broke = false;
+        }
+        if (value & (1 << 3)) != 0 {
+            self.interrupt_enable = false;
+        }
+
+        if (value & 0xffff_fff0) != 0 {
+            panic!("Write to unsupported rsp status bit: {:#?}", value);
+        }
     }
 }
