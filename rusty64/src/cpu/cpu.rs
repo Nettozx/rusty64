@@ -128,39 +128,54 @@ impl Cpu {
     fn execute_instruction(&mut self, instr: Instruction) {
         //section 16.6 of datasheet
         match instr.opcode() {
+            ADDI => {
+                //ADDI page 372
+                //TODO handle overflow exception
+                let res = self.read_reg_gpr(instr.rs()) + instr.imm_sign_extended();
+                self.write_reg_gpr(instr.rt(), res)
+            },
+            ADDIU => {
+                //ADDIU page 373
+                //the same as ADDI but it cannot overflow
+                let res = self.read_reg_gpr(instr.rs()).wrapping_add(
+                    instr.imm_sign_extended());
+                self.write_reg_gpr(instr.rt(), res)
+            },
             ANDI => {
                 //ANDI page 376
-                let res = self.read_reg_gpr(instr.rs() as usize) & (instr.imm() as u64);
-                self.write_reg_gpr(instr.rt() as usize, res);
+                let res = self.read_reg_gpr(instr.rs()) & (instr.imm() as u64);
+                self.write_reg_gpr(instr.rt(), res);
             },
             ORI => {
                 //ORI page 485
-                let res = self.read_reg_gpr(instr.rs() as usize) | (instr.imm() as u64);
-                self.write_reg_gpr(instr.rt() as usize, res);
+                let res = self.read_reg_gpr(instr.rs()) | (instr.imm() as u64);
+                self.write_reg_gpr(instr.rt(), res);
             },
             LUI => {
                 //LUI page 456
                 //sign extend for upper 32 bits
                 let value = ((instr.imm() << 16) as i32) as u64;
-                self.write_reg_gpr(instr.rt() as usize, value );
+                self.write_reg_gpr(instr.rt(), value );
             },
             MTC0 => {
                 //MTC0 page 474
-                let data = self.read_reg_gpr(instr.rt() as usize);
+                let data = self.read_reg_gpr(instr.rt());
                 self.cp0.write_reg(instr.rd(), data);
             },
             BEQL => {
                 //BEQL, BEQZL is the same but with zero filled in already
-                if self.read_reg_gpr(instr.rs() as usize) ==
-                    self.read_reg_gpr(instr.rt() as usize){
+                if self.read_reg_gpr(instr.rs()) == self.read_reg_gpr(instr.rt()){
                     //get the old program counter cause it needs delay slot
                     let old_pc = self.reg_pc;
 
-                    let sign_extended_offset = ((instr.offset() as i16) as u64).wrapping_shl(2);
+                    let sign_extended_offset = (instr.offset_sign_extended()).wrapping_shl(2);
                     self.reg_pc = self.reg_pc.wrapping_add(sign_extended_offset);
                     //TODO make this safer cause it can stack overflow
                     let delay_slot_instr = self.read_instruction(old_pc);
                     self.execute_instruction(delay_slot_instr);
+                } else {
+                    //skip delay slot when branch not taken
+                    self.reg_pc = self.reg_pc.wrapping_add(4);
                 }
 
             },
@@ -168,11 +183,11 @@ impl Cpu {
                 //LW page 458
                 let base = instr.rs();
                 //sign extend for upper 32 bits
-                let sign_extended_offset = (instr.offset() as i16) as u64;
+                let sign_extended_offset = instr.imm_sign_extended();
                 let virt_addr =
                     self.read_reg_gpr(base as usize).wrapping_add(sign_extended_offset);
                 let mem = (self.read_word(virt_addr) as i32) as u64;
-                self.write_reg_gpr(instr.rt() as usize, mem);
+                self.write_reg_gpr(instr.rt(), mem);
             }
         }
     }
