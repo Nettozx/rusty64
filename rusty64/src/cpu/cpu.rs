@@ -103,7 +103,7 @@ impl Cpu {
                 self.cp0.write_reg(instr.rd(), data);
             },
             BEQL => {
-                //BEQL, BEQZL is the same but with zero filled in already
+                //BEQL, BEQZL is the same but with zero filled in already - page 386
                 if self.read_reg_gpr(instr.rs()) == self.read_reg_gpr(instr.rt()){
                     //get the old program counter cause it needs delay slot
                     let old_pc = self.reg_pc;
@@ -117,7 +117,22 @@ impl Cpu {
                     //skip delay slot when branch not taken
                     self.reg_pc = self.reg_pc.wrapping_add(4);
                 }
+            },
+            BNEL => {
+                //BNEL, BNEZL is the same but with zero filled in already - page 400
+                if self.read_reg_gpr(instr.rs()) != self.read_reg_gpr(instr.rt()){
+                    //get the old program counter cause it needs delay slot
+                    let old_pc = self.reg_pc;
 
+                    let sign_extended_offset = instr.offset_sign_extended() << 2;
+                    self.reg_pc = self.reg_pc.wrapping_add(sign_extended_offset);
+                    //TODO make this safer cause it can stack overflow
+                    let delay_slot_instr = self.read_instruction(old_pc);
+                    self.execute_instruction(delay_slot_instr);
+                } else {
+                    //skip delay slot when branch not taken
+                    self.reg_pc = self.reg_pc.wrapping_add(4);
+                }
             },
             LW => {
                 //LW page 458

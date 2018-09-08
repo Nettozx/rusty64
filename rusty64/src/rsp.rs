@@ -38,4 +38,12 @@ impl Rsp {
             panic!("Write to unsupported rsp status bit: {:#?}", value);
         }
     }
+
+    pub fn read_dma_busy_reg(&self) -> u32 {
+        0//TODO
+    }
+
+    pub fn write_dma_busy_reg(&self, value: u32) {
+        panic!("Attemted write to SP_DMA_BUSY_REG: {:#?}", value)
+    }
 }

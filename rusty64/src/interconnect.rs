@@ -10,6 +10,7 @@ const RAM_SIZE: usize = 4 * 1024 * 1024;
 enum Addr {
     PifRom(u32),
     SpStatusReg,
+    SpDmaBusyReg,
 }
 
 pub struct Interconnect {
@@ -31,14 +32,16 @@ impl Interconnect {
         //look at n64 memory map txt for PIF_ROM start and end
         match self.mem_map(addr) {
             Addr::PifRom(offset) => BigEndian::read_u32( &self.pif_rom[offset as usize..]),
-            Addr::SpStatusReg => self.rsp.read_status_reg()
+            Addr::SpStatusReg => self.rsp.read_status_reg(),
+            Addr::SpDmaBusyReg => self.rsp.read_dma_busy_reg()
         }
     }
 
     pub fn write_word(&mut self, addr: u32, value: u32) {
         match self.mem_map(addr) {
             Addr::PifRom(_) => panic!("Cannot write to PIF ROM"),
-            Addr::SpStatusReg => self.rsp.write_status_reg(value)
+            Addr::SpStatusReg => self.rsp.write_status_reg(value),
+            Addr::SpDmaBusyReg => self.rsp.write_dma_busy_reg(value)
         }
     }
 
@@ -47,6 +50,7 @@ impl Interconnect {
         match addr {
             PIF_ROM_START...PIF_ROM_END => Addr::PifRom(addr - PIF_ROM_START),
             SP_STATUS_REG => Addr::SpStatusReg,
+            SP_DMA_BUSY_REG => Addr::SpDmaBusyReg,
             _ => panic!("Unrecognized physical address: {:#x}", addr)
         }
     }
