@@ -38,7 +38,7 @@
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
-          <entry key="rs" value="19685" />
+          <entry key="rs" value="19897" />
           <entry key="toml" value="54" />
         </counts>
       </usages-collector>
@@ -46,7 +46,7 @@
         <counts>
           <entry key="Android RenderScript" value="82" />
           <entry key="PLAIN_TEXT" value="52" />
-          <entry key="Rust" value="19603" />
+          <entry key="Rust" value="19815" />
           <entry key="TOML file" value="2" />
         </counts>
       </usages-collector>
@@ -87,7 +87,7 @@
               </provider>
             </entry>
           </file>
-          <file pinned="false" current-in-tab="false">
+          <file pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/src/interconnect.rs">
               <provider selected="true" editor-type-id="text-editor">
                 <state relative-caret-position="235">
@@ -96,7 +96,7 @@
               </provider>
             </entry>
           </file>
-          <file pinned="false" current-in-tab="true">
+          <file pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/src/cpu/opcode.rs">
               <provider selected="true" editor-type-id="text-editor">
                 <state relative-caret-position="153">
@@ -112,8 +112,8 @@
           <file pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/src/cpu/cpu.rs">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="186">
-                  <caret line="122" column="50" selection-start-line="122" selection-start-column="50" selection-end-line="122" selection-end-column="50" />
+                <state relative-caret-position="254">
+                  <caret line="112" column="19" lean-forward="true" selection-start-line="112" selection-start-column="19" selection-end-line="112" selection-end-column="19" />
                 </state>
               </provider>
             </entry>
@@ -253,7 +253,7 @@
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1536403106677" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1536439756046" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/Cargo.toml" />
     <property name="org.rust.cargo.project.model.PROJECT_DISCOVERY" value="true" />
     <property name="run.code.analysis.last.selected.profile" value="pProject Default" />
@@ -291,12 +291,12 @@
       <workItem from="1536274517712" duration="37285000" />
       <workItem from="1536344712640" duration="22843000" />
       <workItem from="1536373039784" duration="14935000" />
-      <workItem from="1536437825153" duration="1202000" />
+      <workItem from="1536437825153" duration="1767000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="76648000" />
+    <option name="totallyTimeSpent" value="77213000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-1207" y="0" width="1211" height="1887" extended-state="0" />
@@ -411,13 +411,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/interconnect.rs">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="235">
-          <caret line="43" column="42" selection-start-line="43" selection-start-column="42" selection-end-line="43" selection-end-column="42" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/rsp.rs">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="263">
@@ -436,10 +429,17 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/interconnect.rs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="235">
+          <caret line="43" column="42" selection-start-line="43" selection-start-column="42" selection-end-line="43" selection-end-column="42" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/cpu/cpu.rs">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="186">
-          <caret line="122" column="50" selection-start-line="122" selection-start-column="50" selection-end-line="122" selection-end-column="50" />
+        <state relative-caret-position="254">
+          <caret line="112" column="19" lean-forward="true" selection-start-line="112" selection-start-column="19" selection-end-line="112" selection-end-column="19" />
         </state>
       </provider>
     </entry>
