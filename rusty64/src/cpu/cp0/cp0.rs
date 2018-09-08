@@ -10,11 +10,6 @@ pub struct Cp0 {
 }
 
 impl Cp0 {
-    pub fn power_on_reset(&mut self) {
-        //section 9.2.1 in datasheet & page 153
-        self.reg_config.power_on_reset();
-    }
-
     pub fn write_reg(&mut self, index: u32, data: u64) {
         match index {
             // Status reg - section 6.3.5 in datasheet

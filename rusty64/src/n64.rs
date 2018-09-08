@@ -15,10 +15,6 @@ impl N64 {
         }
     }
 
-    pub fn power_on_reset(&mut self) {
-        self.cpu.power_on_reset();
-    }
-
     pub fn run(&mut self) {
         self.cpu.run();
     }

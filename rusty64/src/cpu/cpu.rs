@@ -27,69 +27,13 @@ pub struct Cpu {
     interconnect: interconnect::Interconnect
 }
 
-impl fmt::Debug for Cpu {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        const REGS_PER_LINE: usize = 2;
-        const REG_NAMES: [&'static str; NUM_GPR] = [
-            "r0", "at", "v0", "v1", "a0", "a1", "a2", "a3",
-            "t0", "t1", "t2", "t3", "t4", "t5", "t6", "t7",
-            "s0", "s1", "s2", "s3", "s4", "s5", "s6", "s7",
-            "t8", "t9", "k0", "k1", "gp", "sp", "s8", "ra",
-        ];
-
-        write!(f, "\nCPU General Purpose Registers:")?;
-        for reg_num in 0..NUM_GPR {
-            if (reg_num % REGS_PER_LINE) == 0 {
-                writeln!(f, "")?;
-            }
-            write!(f, "{reg_name}/gpr{num:02}: {value:#018X} ",
-                   num = reg_num,
-                   reg_name = REG_NAMES[reg_num],
-                   value = self.reg_gpr[reg_num],
-            )?;
-        }
-
-        write!(f, "\n\nCPU Floating Point Registers:")?;
-        for reg_num in 0..NUM_GPR {
-            if (reg_num % REGS_PER_LINE) == 0 {
-                writeln!(f, "")?;
-            }
-            write!(f,
-                   "fpr{num:02}: {value:21} ",
-                   num = reg_num,
-                   value = self.reg_fpr[reg_num],
-            )?;
-        }
-
-        writeln!(f, "\n\nCPU Special Registers:")?;
-        writeln!(f,
-                 "\
-            reg_pc: {:#018X}\n\
-            reg_hi: {:#018X}\n\
-            reg_lo: {:#018X}\n\
-            reg_llbit: {}\n\
-            reg_fcr0: {:#010X}\n\
-            reg_fcr31: {:#010X}\n\
-            ",
-                 self.reg_pc,
-                 self.reg_hi,
-                 self.reg_lo,
-                 self.reg_llbit,
-                 self.reg_fcr0,
-                 self.reg_fcr31
-        )?;
-
-        writeln!(f, "{:#?}", self.cp0)?;
-        writeln!(f, "{:#?}", self.interconnect)
-    }
-}
-
 impl Cpu {
     pub fn new(interconnect: interconnect::Interconnect) -> Cpu {
         Cpu {
             reg_gpr: [0; NUM_GPR],
             reg_fpr: [0.0; NUM_GPR],
-            reg_pc: 0,
+            //power on reset value, section 9.2.1 in datasheet & page 153
+            reg_pc: 0xffff_ffff_bfc0_0000, //TODO move to const
             reg_hi: 0,
             reg_lo: 0,
             reg_llbit: false,
@@ -99,11 +43,7 @@ impl Cpu {
             interconnect,
         }
     }
-    pub fn power_on_reset(&mut self) {
-        self.cp0.power_on_reset();
-        //read pages 134-136 in datasheet and look at memory map txt file
-        self.reg_pc = 0xffff_ffff_bfc0_0000;
-    }
+
     pub fn run(&mut self) {
         loop {
             self.run_instruction();
@@ -224,3 +164,59 @@ impl Cpu {
     }
 }
 
+impl fmt::Debug for Cpu {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        const REGS_PER_LINE: usize = 2;
+        const REG_NAMES: [&'static str; NUM_GPR] = [
+            "r0", "at", "v0", "v1", "a0", "a1", "a2", "a3",
+            "t0", "t1", "t2", "t3", "t4", "t5", "t6", "t7",
+            "s0", "s1", "s2", "s3", "s4", "s5", "s6", "s7",
+            "t8", "t9", "k0", "k1", "gp", "sp", "s8", "ra",
+        ];
+
+        write!(f, "\nCPU General Purpose Registers:")?;
+        for reg_num in 0..NUM_GPR {
+            if (reg_num % REGS_PER_LINE) == 0 {
+                writeln!(f, "")?;
+            }
+            write!(f, "{reg_name}/gpr{num:02}: {value:#018X} ",
+                   num = reg_num,
+                   reg_name = REG_NAMES[reg_num],
+                   value = self.reg_gpr[reg_num],
+            )?;
+        }
+
+        write!(f, "\n\nCPU Floating Point Registers:")?;
+        for reg_num in 0..NUM_GPR {
+            if (reg_num % REGS_PER_LINE) == 0 {
+                writeln!(f, "")?;
+            }
+            write!(f,
+                   "fpr{num:02}: {value:21} ",
+                   num = reg_num,
+                   value = self.reg_fpr[reg_num],
+            )?;
+        }
+
+        writeln!(f, "\n\nCPU Special Registers:")?;
+        writeln!(f,
+                 "\
+            reg_pc: {:#018X}\n\
+            reg_hi: {:#018X}\n\
+            reg_lo: {:#018X}\n\
+            reg_llbit: {}\n\
+            reg_fcr0: {:#010X}\n\
+            reg_fcr31: {:#010X}\n\
+            ",
+                 self.reg_pc,
+                 self.reg_hi,
+                 self.reg_lo,
+                 self.reg_llbit,
+                 self.reg_fcr0,
+                 self.reg_fcr31
+        )?;
+
+        writeln!(f, "{:#?}", self.cp0)?;
+        writeln!(f, "{:#?}", self.interconnect)
+    }
+}
