@@ -118,6 +118,11 @@ impl Cpu {
         let imm = instruction & 0xffff;
         //section 16.6 of datasheet
         match opcode {
+            0b00_1100 => {
+                //ANDI page 376
+                let res = self.read_reg_gpr(rs as usize) & (imm as u64);
+                self.write_reg_gpr(rt as usize, res);
+            },
             0b00_1101 => {
                 //ORI page 485
                 let res = self.read_reg_gpr(rs as usize) | (imm as u64);
@@ -135,6 +140,18 @@ impl Cpu {
                 let data = self.read_reg_gpr(rt as usize);
                 self.cp0.write_reg(rd, data);
             },
+            0b01_0100 => {
+                //BEQL, BEQZL is the same but with zero filled in already
+                let offset = imm;
+                if self.read_reg_gpr(rs as usize) ==
+                    self.read_reg_gpr(rt as usize){
+                    let sign_extended_offset = ((offset as i16) as u64).wrapping_shl(2);
+                    self.reg_pc = self.reg_pc.wrapping_add(sign_extended_offset);
+                    //TODO make this safer cause it can stack overflow
+                    self.run_instruction();
+                }
+
+            },
             0b10_0011 => {
                 //LW page 458
                 let base = rs;
@@ -145,7 +162,7 @@ impl Cpu {
                     self.read_reg_gpr(base as usize).wrapping_add(sign_extended_offset);
                 let mem = (self.read_word(virt_addr) as i32) as u64;
                 self.write_reg_gpr(rt as usize, mem);
-            }
+            },
             _ => panic!("Unrecognized instruction: {:#x}", instruction)
         }
 
