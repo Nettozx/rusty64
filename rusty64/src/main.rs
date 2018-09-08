@@ -64,7 +64,7 @@ fn main() {
     }
 }
 
-fn read_bin<P: AsRef<Path>>(path: P) -> Vec<u8> {
+fn read_bin<P: AsRef<Path>>(path: P) -> Box<[u8]> {
     //open the rom file
     let mut file = fs::File::open(path).unwrap();
     //read the rom
@@ -72,5 +72,5 @@ fn read_bin<P: AsRef<Path>>(path: P) -> Vec<u8> {
     file.read_to_end(&mut file_buf).unwrap();
     //get unmutable version of file_buf
     //in c++ everything is mutable by default, not in rust
-    file_buf
+    file_buf.into_boxed_slice()
 }

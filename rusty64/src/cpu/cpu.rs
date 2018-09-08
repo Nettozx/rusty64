@@ -137,8 +137,8 @@ impl Cpu {
             ADDIU => {
                 //ADDIU page 373
                 //the same as ADDI but it cannot overflow
-                let res = self.read_reg_gpr(instr.rs()).wrapping_add(
-                    instr.imm_sign_extended());
+                let res = self.read_reg_gpr(instr.rs())
+                    .wrapping_add(instr.imm_sign_extended());
                 self.write_reg_gpr(instr.rt(), res)
             },
             ANDI => {
@@ -168,7 +168,7 @@ impl Cpu {
                     //get the old program counter cause it needs delay slot
                     let old_pc = self.reg_pc;
 
-                    let sign_extended_offset = (instr.offset_sign_extended()).wrapping_shl(2);
+                    let sign_extended_offset = instr.offset_sign_extended() << 2;
                     self.reg_pc = self.reg_pc.wrapping_add(sign_extended_offset);
                     //TODO make this safer cause it can stack overflow
                     let delay_slot_instr = self.read_instruction(old_pc);
