@@ -6,6 +6,10 @@ const SP_BASE_REG: u32      = 0x0404_0000;
 const SP_STATUS_REG: u32    = 0x0404_0010;
 const SP_DMA_BUSY_REG: u32  = 0x0404_0018;
 
+const AI_BASE_REG: u32      = 0x0450_0000;
+const AI_DRAM_ADDR_REG: u32 = 0x0450_0000;
+const AI_LEN_REG: u32       = 0x0450_0004;
+
 const VI_BASE_REG: u32      = 0x0440_0000;
 const VI_INTR_REG: u32      = 0x0440_000c;
 const VI_CURRENT_REG: u32   = 0x0440_0010;
@@ -19,6 +23,9 @@ pub enum Addr {
 
     SpStatusReg,
     SpDmaBusyReg,
+
+    AiDramAddrReg,
+    AiLenReg,
 
     ViIntrReg,
     ViCurrentReg,
@@ -34,6 +41,9 @@ pub fn map_addr(addr: u32) -> Addr {
 
         SP_STATUS_REG => Addr::SpStatusReg,
         SP_DMA_BUSY_REG => Addr::SpDmaBusyReg,
+
+        AI_DRAM_ADDR_REG => Addr::AiDramAddrReg,
+        AI_LEN_REG => Addr::AiLenReg,
 
         VI_INTR_REG => Addr::ViIntrReg,
         VI_CURRENT_REG => Addr::ViCurrentReg,

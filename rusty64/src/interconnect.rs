@@ -1,6 +1,7 @@
 use super::byteorder::{BigEndian, ByteOrder};
 use super::mem_map::*;
 use super::rsp::Rsp;
+use super::audio_interface::AudioInterface;
 use super::video_interface::VideoInterface;
 use super::peripheral_interface::PeripheralInterface;
 
@@ -11,6 +12,7 @@ const RAM_SIZE: usize = 4 * 1024 * 1024;
 
 pub struct Interconnect {
     rsp: Rsp,
+    ai: AudioInterface,
     vi: VideoInterface,
     pi: PeripheralInterface,
     pif_rom: Box<[u8]>,
@@ -21,6 +23,7 @@ impl Interconnect {
     pub fn new(pif_rom: Box<[u8]>) -> Interconnect {
         Interconnect {
             rsp: Rsp::new(),
+            ai: AudioInterface::default(),
             vi: VideoInterface::default(),
             pi: PeripheralInterface::default(),
             pif_rom,
@@ -36,6 +39,9 @@ impl Interconnect {
             Addr::SpStatusReg   => self.rsp.read_status_reg(),
             Addr::SpDmaBusyReg  => self.rsp.read_dma_busy_reg(),
 
+            Addr::AiDramAddrReg => self.ai.read_dram_addr_reg(),
+            Addr::AiLenReg      => self.ai.read_len_reg(),
+
             Addr::ViIntrReg     => self.vi.read_intr_reg(),
             Addr::ViCurrentReg  => self.vi.read_current_reg(),
             Addr::ViHStartReg   => self.vi.read_h_start_reg(),
@@ -50,6 +56,9 @@ impl Interconnect {
 
             Addr::SpStatusReg   => self.rsp.write_status_reg(value),
             Addr::SpDmaBusyReg  => self.rsp.write_dma_busy_reg(value),
+
+            Addr::AiDramAddrReg => self.ai.write_dram_addr_reg(value),
+            Addr::AiLenReg      => self.ai.write_len_reg(value),
 
             Addr::ViIntrReg     => self.vi.write_intr_reg(value),
             Addr::ViCurrentReg  => self.vi.write_current_reg(value),
