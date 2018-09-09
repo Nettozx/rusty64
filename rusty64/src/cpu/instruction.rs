@@ -1,4 +1,4 @@
-use super::opcode::Opcode;
+use super::opcode::*;
 use std::fmt;
 use num::FromPrimitive;
 
@@ -8,8 +8,9 @@ pub struct Instruction(pub u32);
 impl Instruction {
     #[inline(always)]
     pub fn opcode(&self) -> Opcode {
-        Opcode::from_u32((self.0 >> 26) & 0b111111).unwrap_or_else(
-            || panic!("Unrecognized instruction: {:#x}", self.0)
+        let value = (self.0 >> 26) & 0b111111;
+        Opcode::from_u32(value).unwrap_or_else(
+            || panic!("Unrecognized instruction: {:#010x} (op:{:#08b})", self.0, value)
         )
     }
 
@@ -46,6 +47,13 @@ impl Instruction {
     #[inline(always)]
     pub fn offset_sign_extended(&self) -> u64 {
         self.imm_sign_extended()
+    }
+
+    pub fn special_op(&self) -> SpecialOpcode {
+        let value = self.0& 0b111111;
+        SpecialOpcode::from_u32(value).unwrap_or_else(
+            || panic!("Unrecognized special opcode: {:#010x} (op:{:#08b})", self.0, value)
+        )
     }
 }
 

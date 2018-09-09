@@ -1,6 +1,7 @@
 use super::super::interconnect;
 use super::cp0;
 use super::opcode::Opcode::*;
+use super::opcode::SpecialOpcode::*;
 use super::instruction::Instruction;
 
 use std::fmt;
@@ -68,6 +69,18 @@ impl Cpu {
     fn execute_instruction(&mut self, instr: Instruction) {
         //section 16.6 of datasheet
         match instr.opcode() {
+            SPECIAL => match instr.special_op() {
+                JR => {
+                    //get the old program counter cause it needs delay slot
+                    let delay_slot_pc = self.reg_pc;
+
+                    //Update PC before executing delay slot instruction
+                    self.reg_pc = self.read_reg_gpr(instr.rs());
+
+                    let delay_slot_instr = self.read_instruction(delay_slot_pc);
+                    self.execute_instruction(delay_slot_instr);
+                },
+            },
             ADDI => {
                 //ADDI page 372
                 //TODO handle overflow exception
@@ -146,13 +159,13 @@ impl Cpu {
 
         if is_taken {
             //get the old program counter cause it needs delay slot
-            let old_pc = self.reg_pc;
+            let delay_slot_pc = self.reg_pc;
 
             let sign_extended_offset = instr.offset_sign_extended() << 2;
             //Update PC before executing delay slot instruction
             self.reg_pc = self.reg_pc.wrapping_add(sign_extended_offset);
             //TODO make this safer cause it can stack overflow
-            let delay_slot_instr = self.read_instruction(old_pc);
+            let delay_slot_instr = self.read_instruction(delay_slot_pc);
             self.execute_instruction(delay_slot_instr);
         }
 
@@ -215,7 +228,7 @@ impl fmt::Debug for Cpu {
             "t8", "t9", "k0", "k1", "gp", "sp", "s8", "ra",
         ];
 
-        write!(f, "\nCPU General Purpose Registers:")?;
+        write!(f, "\nCPU General Purpose Registers:\n")?;
         for reg_num in 0..NUM_GPR {
             if (reg_num % REGS_PER_LINE) == 0 {
                 writeln!(f, "")?;
@@ -227,7 +240,7 @@ impl fmt::Debug for Cpu {
             )?;
         }
 
-        write!(f, "\n\nCPU Floating Point Registers:")?;
+        write!(f, "\n\nCPU Floating Point Registers:\n")?;
         for reg_num in 0..NUM_GPR {
             if (reg_num % REGS_PER_LINE) == 0 {
                 writeln!(f, "")?;
@@ -239,7 +252,7 @@ impl fmt::Debug for Cpu {
             )?;
         }
 
-        writeln!(f, "\n\nCPU Special Registers:")?;
+        writeln!(f, "\n\nCPU Special Registers:\n")?;
         writeln!(f,
                  "\
             reg_pc: {:#018X}\n\
