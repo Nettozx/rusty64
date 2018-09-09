@@ -7,6 +7,7 @@ enum_from_primitive! {
         ORI   = 0b00_1101, //page 485
         LUI   = 0b00_1111, //page 456
         MTC0  = 0b01_0000, //page 474
+        BNE   = 0b00_0101, //page 399
         BEQL  = 0b01_0100, //page 386
         BNEL  = 0b01_0101, //page 400
         LW    = 0b10_0011, //page 458

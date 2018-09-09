@@ -2,6 +2,10 @@ const PIF_ROM_START: u32    = 0x1fc0_0000;
 const PIF_ROM_LENGTH: u32   = 0x0000_07c0;
 const PIF_ROM_END: u32      = PIF_ROM_START + PIF_ROM_LENGTH - 1;
 
+const SP_IMEM_START: u32    = 0x0400_1000;
+pub const SP_IMEM_LENGTH: u32   = 0x0000_1000;
+const SP_IMEM_END: u32      = SP_IMEM_START + SP_IMEM_LENGTH - 1;
+
 const SP_BASE_REG: u32      = 0x0404_0000;
 const SP_STATUS_REG: u32    = 0x0404_0010;
 const SP_DMA_BUSY_REG: u32  = 0x0404_0018;
@@ -21,6 +25,7 @@ const PI_STATUS_REG: u32    = 0x0460_0010;
 pub enum Addr {
     PifRom(u32),
 
+    SpImem(u32),
     SpStatusReg,
     SpDmaBusyReg,
 
@@ -38,6 +43,8 @@ pub fn map_addr(addr: u32) -> Addr {
     //look at n64 memory map txt for PIF_ROM start and end
     match addr {
         PIF_ROM_START...PIF_ROM_END => Addr::PifRom(addr - PIF_ROM_START),
+
+        SP_IMEM_START...SP_IMEM_END => Addr::SpImem(addr - SP_IMEM_START),
 
         SP_STATUS_REG => Addr::SpStatusReg,
         SP_DMA_BUSY_REG => Addr::SpDmaBusyReg,

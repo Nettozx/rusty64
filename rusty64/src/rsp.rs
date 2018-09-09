@@ -1,4 +1,9 @@
+use super::byteorder::{BigEndian, ByteOrder};
+use super::mem_map::*;
+
 pub struct Rsp {
+    imem: Box<[u8]>,
+
     halt: bool,
     broke: bool,
     interrupt_enable: bool,
@@ -8,11 +13,22 @@ impl Rsp {
     pub fn new() -> Rsp {
         //TODO check for correct initialization for hardware state
         Rsp {
+            imem: vec![0; SP_IMEM_LENGTH as usize].into_boxed_slice(),
+
             halt: true,
             broke: false,
             interrupt_enable: false,
         }
     }
+
+    pub fn read_imem(&self, offset: u32) -> u32 {
+        BigEndian::read_u32(&self.imem[offset as usize..])
+    }
+
+    pub fn write_imem(&mut self, offset: u32, value: u32) {
+        BigEndian::write_u32(&mut self.imem[offset as usize..], value)
+    }
+
     pub fn read_status_reg(&self) -> u32 {
         (if self.halt {1} else {0} << 0) |
             (if self.interrupt_enable {1} else {0} << 1)

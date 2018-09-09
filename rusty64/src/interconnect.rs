@@ -36,6 +36,8 @@ impl Interconnect {
         match map_addr(addr) {
             Addr::PifRom(offset) => BigEndian::read_u32( &self.pif_rom[offset as usize..]),
 
+            Addr::SpImem(offset) => self.rsp.read_imem(offset),
+
             Addr::SpStatusReg   => self.rsp.read_status_reg(),
             Addr::SpDmaBusyReg  => self.rsp.read_dma_busy_reg(),
 
@@ -53,6 +55,8 @@ impl Interconnect {
     pub fn write_word(&mut self, addr: u32, value: u32) {
         match map_addr(addr) {
             Addr::PifRom(_)     => panic!("Cannot write to PIF ROM"),
+
+            Addr::SpImem(offset) => self.rsp.write_imem(offset, value),
 
             Addr::SpStatusReg   => self.rsp.write_status_reg(value),
             Addr::SpDmaBusyReg  => self.rsp.write_dma_busy_reg(value),

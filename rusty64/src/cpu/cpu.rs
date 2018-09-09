@@ -102,13 +102,16 @@ impl Cpu {
                 let data = self.read_reg_gpr(instr.rt());
                 self.cp0.write_reg(instr.rd(), data);
             },
+            BNE => {
+                self.branch(instr, |rs, rt| rs != rt);
+            }
             BEQL => {
                 //BEQL, BEQZL is the same but with zero filled in already - page 386
-                self.branch(instr, |rs, rt| rs == rt)
+                self.branch_likely(instr, |rs, rt| rs == rt);
             },
             BNEL => {
                 //BNEL, BNEZL is the same but with zero filled in already - page 400
-                self.branch(instr, |rs, rt| rs != rt)
+                self.branch_likely(instr, |rs, rt| rs != rt);
             },
             LW => {
                 //LW page 458
@@ -135,19 +138,31 @@ impl Cpu {
     }
 
     //branch lambda expression
-    fn branch<F>(&mut self, instr: Instruction, f: F) where F: FnOnce(u64, u64) -> bool {
+    fn branch<F>(&mut self, instr: Instruction, f: F) -> bool
+        where F: FnOnce(u64, u64) -> bool {
         let rs = self.read_reg_gpr(instr.rs());
         let rt = self.read_reg_gpr(instr.rt());
-        if f(rs, rt) {
+        let is_taken = f(rs, rt);
+
+        if is_taken {
             //get the old program counter cause it needs delay slot
             let old_pc = self.reg_pc;
 
             let sign_extended_offset = instr.offset_sign_extended() << 2;
+            //Update PC before executing delay slot instruction
             self.reg_pc = self.reg_pc.wrapping_add(sign_extended_offset);
             //TODO make this safer cause it can stack overflow
             let delay_slot_instr = self.read_instruction(old_pc);
             self.execute_instruction(delay_slot_instr);
-        } else {
+        }
+
+        is_taken
+    }
+
+    //branch likely lambda expression
+    fn branch_likely<F>(&mut self, instr: Instruction, f: F)
+        where F: FnOnce(u64, u64) -> bool {
+        if !self.branch(instr, f) {
             //skip delay slot when branch not taken
             self.reg_pc = self.reg_pc.wrapping_add(4);
         }
