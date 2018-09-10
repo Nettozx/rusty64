@@ -95,8 +95,23 @@ impl Cpu {
             },
             ADDI => {
                 //ADDI page 372
-                //TODO handle overflow exception
-                let res = self.read_reg_gpr(instr.rs()) + instr.imm_sign_extended();
+                let  rs_positive = (self.read_reg_gpr(instr.rs()) >> 31) & 1 == 0;
+                let imm_positive = (instr.imm_sign_extended() >> 31) & 1 == 0;
+                let res = self.read_reg_gpr(instr.rs()).wrapping_add(instr.imm_sign_extended());
+                let res_positive = (res >> 31 & 1) == 0;
+                match (rs_positive, imm_positive, res_positive) {
+                    (true, true, false) => {
+                        panic!("Integer overflow exception not implemented! (p+p=n) {:016X} + \
+                        {:016X} != {:016X}", instr.rs(), instr.imm_sign_extended(), res)
+                    },
+                    (false, false, true) => {
+                        panic!("Integer overflow exception not implemented! (n+n=p) {:016X} + \
+                        {:016X} != {:016X}", instr.rs(), instr.imm_sign_extended(), res)
+                    },
+                    _ => {}
+                }
+
+                //let res = self.read_reg_gpr(instr.rs()) + instr.imm_sign_extended();
                 self.write_reg_gpr(instr.rt(), res)
             },
             ADDIU => {
@@ -147,7 +162,7 @@ impl Cpu {
                 //sign extend for upper 32 bits
                 let sign_extended_offset = instr.imm_sign_extended();
                 let virt_addr =
-                    self.read_reg_gpr(base as usize).wrapping_add(sign_extended_offset);
+                    self.read_reg_gpr(base).wrapping_add(sign_extended_offset);
                 let mem = (self.read_word(virt_addr) as i32) as u64;
                 self.write_reg_gpr(instr.rt(), mem);
             },
@@ -157,7 +172,7 @@ impl Cpu {
                 //sign extend for upper 32 bits
                 let sign_extended_offset = instr.imm_sign_extended();
                 let virt_addr =
-                    self.read_reg_gpr(base as usize).wrapping_add(sign_extended_offset);
+                    self.read_reg_gpr(base).wrapping_add(sign_extended_offset);
                 let mem = self.read_reg_gpr(instr.rt()) as u32;
                 self.write_word(virt_addr, mem);
                 let mem = (self.read_word(virt_addr) as i32) as u64;

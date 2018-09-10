@@ -1,11 +1,14 @@
+#![deny(trivial_casts, trivial_numeric_casts)]
 extern crate byteorder;
 extern crate num;
-#[macro_use] extern crate enum_primitive;
+#[macro_use]
+extern crate enum_primitive;
 
 mod n64;
 mod cpu;
 mod pif;
 mod rsp;
+mod rdp;
 mod audio_interface;
 mod video_interface;
 mod peripheral_interface;

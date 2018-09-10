@@ -1,11 +1,12 @@
-use super::byteorder::{BigEndian, ByteOrder};
-use super::mem_map::*;
-use super::pif::Pif;
-use super::rsp::Rsp;
-use super::audio_interface::AudioInterface;
-use super::video_interface::VideoInterface;
-use super::peripheral_interface::PeripheralInterface;
-use super::serial_interface::SerialInterface;
+use byteorder::{BigEndian, ByteOrder};
+use mem_map::*;
+use pif::Pif;
+use rsp::Rsp;
+use rdp::Rdp;
+use audio_interface::AudioInterface;
+use video_interface::VideoInterface;
+use peripheral_interface::PeripheralInterface;
+use serial_interface::SerialInterface;
 
 use std::fmt;
 
@@ -15,6 +16,7 @@ const RDRAM_SIZE: usize = 4 * 1024 * 1024;
 pub struct Interconnect {
     pif: Pif,
     rsp: Rsp,
+    rdp: Rdp,
     ai: AudioInterface,
     vi: VideoInterface,
     pi: PeripheralInterface,
@@ -28,6 +30,7 @@ impl Interconnect {
         Interconnect {
             pif: Pif::new(boot_rom),
             rsp: Rsp::new(),
+            rdp: Rdp,
             ai: AudioInterface::default(),
             vi: VideoInterface::default(),
             pi: PeripheralInterface::default(),
@@ -49,6 +52,8 @@ impl Interconnect {
 
             Addr::SpStatusReg     => self.rsp.read_status_reg(),
             Addr::SpDmaBusyReg    => self.rsp.read_dma_busy_reg(),
+
+            Addr::DpcStatusReg    => self.rdp.read_status_reg(),
 
             Addr::AiDramAddrReg   => self.ai.read_dram_addr_reg(),
             Addr::AiLenReg        => self.ai.read_len_reg(),
@@ -78,6 +83,8 @@ impl Interconnect {
 
             Addr::SpStatusReg     => self.rsp.write_status_reg(value),
             Addr::SpDmaBusyReg    => self.rsp.write_dma_busy_reg(value),
+
+            Addr::DpcStatusReg    => self.rdp.write_status_reg(value),
 
             Addr::AiDramAddrReg   => self.ai.write_dram_addr_reg(value),
             Addr::AiLenReg        => self.ai.write_len_reg(value),
