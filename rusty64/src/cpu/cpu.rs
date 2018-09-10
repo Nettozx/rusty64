@@ -70,6 +70,11 @@ impl Cpu {
         //section 16.6 of datasheet
         match instr.opcode() {
             SPECIAL => match instr.special_op() {
+                OR => {
+                    let value = self.read_reg_gpr(instr.rs()) |
+                        self.read_reg_gpr(instr.rt());
+                    self.write_reg_gpr(instr.rd() as usize, value);
+                }
                 SRL => {
                     //SRL page 511
                     let value = self.read_reg_gpr(instr.rt()) >> instr.sa();
@@ -121,6 +126,9 @@ impl Cpu {
                 //MTC0 page 474
                 let data = self.read_reg_gpr(instr.rt());
                 self.cp0.write_reg(instr.rd(), data);
+            },
+            BEQ => {
+                self.branch(instr, |rs, rt| rs == rt);
             },
             BNE => {
                 self.branch(instr, |rs, rt| rs != rt);
