@@ -6,6 +6,10 @@ const PIF_RAM_START: u32        = 0x1fc0_07c0;
 pub const PIF_RAM_LENGTH: u32   = 0x0000_0040;
 const PIF_RAM_END: u32          = PIF_RAM_START + PIF_RAM_LENGTH - 1;
 
+const CART_DOM1_ADDR2_START: u32   = 0x1000_0000;
+const CART_DOM1_ADDR2_LENGTH: u32  = 0x0fc0_0000;
+const CART_DOM1_ADDR2_END: u32     = CART_DOM1_ADDR2_START + CART_DOM1_ADDR2_LENGTH - 1;
+
 const SP_IMEM_START: u32        = 0x0400_1000;
 pub const SP_IMEM_LENGTH: u32   = 0x0000_1000;
 const SP_IMEM_END: u32          = SP_IMEM_START + SP_IMEM_LENGTH - 1;
@@ -37,6 +41,8 @@ pub enum Addr {
     PifRom(u32),
     PifRam(u32),
 
+    CartDom1(u32),
+
     SpImem(u32),
     SpStatusReg,
     SpDmaBusyReg,
@@ -62,6 +68,8 @@ pub fn map_addr(addr: u32) -> Addr {
     match addr {
         PIF_ROM_START...PIF_ROM_END => Addr::PifRom(addr - PIF_ROM_START),
         PIF_RAM_START...PIF_RAM_END => Addr::PifRam(addr - PIF_RAM_START),
+
+        CART_DOM1_ADDR2_START...CART_DOM1_ADDR2_END => Addr::CartDom1(addr - CART_DOM1_ADDR2_START),
 
         SP_IMEM_START...SP_IMEM_END => Addr::SpImem(addr - SP_IMEM_START),
 

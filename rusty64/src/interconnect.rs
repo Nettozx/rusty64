@@ -1,3 +1,4 @@
+use super::byteorder::{BigEndian, ByteOrder};
 use super::mem_map::*;
 use super::pif::Pif;
 use super::rsp::Rsp;
@@ -9,7 +10,7 @@ use super::serial_interface::SerialInterface;
 use std::fmt;
 
 //RAM on N64 is 4MB RDRAM with 9bit bus
-const RAM_SIZE: usize = 4 * 1024 * 1024;
+const RDRAM_SIZE: usize = 4 * 1024 * 1024;
 
 pub struct Interconnect {
     pif: Pif,
@@ -18,11 +19,12 @@ pub struct Interconnect {
     vi: VideoInterface,
     pi: PeripheralInterface,
     si: SerialInterface,
-    ram: Box<[u16]>
+    cart_rom: Box<[u8]>,
+    rdram: Box<[u16]>
 }
 
 impl Interconnect {
-    pub fn new(boot_rom: Box<[u8]>) -> Interconnect {
+    pub fn new(boot_rom: Box<[u8]>, cart_rom: Box<[u8]>) -> Interconnect {
         Interconnect {
             pif: Pif::new(boot_rom),
             rsp: Rsp::new(),
@@ -30,7 +32,8 @@ impl Interconnect {
             vi: VideoInterface::default(),
             pi: PeripheralInterface::default(),
             si: SerialInterface::default(),
-            ram: vec![0; RAM_SIZE].into_boxed_slice(),
+            cart_rom,
+            rdram: vec![0; RDRAM_SIZE].into_boxed_slice(),
         }
     }
 
@@ -39,6 +42,8 @@ impl Interconnect {
         match map_addr(addr) {
             Addr::PifRom(offset)  => self.pif.read_boot_rom(offset),
             Addr::PifRam(offset)  => self.pif.read_ram(offset),
+
+            Addr::CartDom1(offset)=> BigEndian::read_u32(&self.cart_rom[offset as usize..]),
 
             Addr::SpImem(offset)  => self.rsp.read_imem(offset),
 
@@ -66,6 +71,8 @@ impl Interconnect {
         match map_addr(addr) {
             Addr::PifRom(_)       => panic!("Cannot write to PIF ROM"),
             Addr::PifRam(offset)  => self.pif.write_ram(offset, value),
+
+            Addr::CartDom1(offset)=> panic!("Cannot write to CART ROM"),
 
             Addr::SpImem(offset)  => self.rsp.write_imem(offset, value),
 
