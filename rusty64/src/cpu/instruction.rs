@@ -30,6 +30,11 @@ impl Instruction {
     }
 
     #[inline(always)]
+    pub fn sa(&self) -> u32 {
+        (self.0 >> 6) & 0b11111
+    }
+
+    #[inline(always)]
     pub fn imm(&self) -> u32 {
         self.0 & 0xffff
     }

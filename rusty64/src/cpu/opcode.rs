@@ -19,6 +19,7 @@ enum_from_primitive! {
 enum_from_primitive! {
 #[derive(Debug)]
 pub enum SpecialOpcode {
-        JR  = 0b00_1000 //page 438
+        SRL = 0b00_0010, //page 511
+        JR  = 0b00_1000, //page 438
     }
 }
