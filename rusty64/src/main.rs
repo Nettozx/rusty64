@@ -4,6 +4,7 @@ extern crate num;
 
 mod n64;
 mod cpu;
+mod pif;
 mod rsp;
 mod audio_interface;
 mod video_interface;

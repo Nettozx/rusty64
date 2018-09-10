@@ -1,5 +1,5 @@
-use super::byteorder::{BigEndian, ByteOrder};
 use super::mem_map::*;
+use super::pif::Pif;
 use super::rsp::Rsp;
 use super::audio_interface::AudioInterface;
 use super::video_interface::VideoInterface;
@@ -11,22 +11,22 @@ use std::fmt;
 const RAM_SIZE: usize = 4 * 1024 * 1024;
 
 pub struct Interconnect {
+    pif: Pif,
     rsp: Rsp,
     ai: AudioInterface,
     vi: VideoInterface,
     pi: PeripheralInterface,
-    pif_rom: Box<[u8]>,
     ram: Box<[u16]>
 }
 
 impl Interconnect {
-    pub fn new(pif_rom: Box<[u8]>) -> Interconnect {
+    pub fn new(boot_rom: Box<[u8]>) -> Interconnect {
         Interconnect {
+            pif: Pif::new(boot_rom),
             rsp: Rsp::new(),
             ai: AudioInterface::default(),
             vi: VideoInterface::default(),
             pi: PeripheralInterface::default(),
-            pif_rom,
             ram: vec![0; RAM_SIZE].into_boxed_slice(),
         }
     }
@@ -34,7 +34,8 @@ impl Interconnect {
     pub fn read_word(&self, addr: u32) -> u32 {
         //look at n64 memory map txt for PIF_ROM start and end
         match map_addr(addr) {
-            Addr::PifRom(offset) => BigEndian::read_u32( &self.pif_rom[offset as usize..]),
+            Addr::PifRom(offset) => self.pif.read_boot_rom(offset),
+            Addr::PifRam(offset) => self.pif.read_ram(offset),
 
             Addr::SpImem(offset) => self.rsp.read_imem(offset),
 
@@ -55,6 +56,7 @@ impl Interconnect {
     pub fn write_word(&mut self, addr: u32, value: u32) {
         match map_addr(addr) {
             Addr::PifRom(_)     => panic!("Cannot write to PIF ROM"),
+            Addr::PifRam(offset) => self.pif.write_ram(offset, value),
 
             Addr::SpImem(offset) => self.rsp.write_imem(offset, value),
 
