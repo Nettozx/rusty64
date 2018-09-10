@@ -25,7 +25,7 @@
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
         <counts>
-          <entry key="rs" value="30" />
+          <entry key="rs" value="31" />
           <entry key="toml" value="3" />
         </counts>
       </usages-collector>
@@ -33,13 +33,13 @@
         <counts>
           <entry key="Android RenderScript" value="1" />
           <entry key="PLAIN_TEXT" value="1" />
-          <entry key="Rust" value="29" />
+          <entry key="Rust" value="30" />
           <entry key="TOML file" value="2" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
-          <entry key="rs" value="25783" />
+          <entry key="rs" value="26297" />
           <entry key="toml" value="54" />
         </counts>
       </usages-collector>
@@ -47,7 +47,7 @@
         <counts>
           <entry key="Android RenderScript" value="82" />
           <entry key="PLAIN_TEXT" value="52" />
-          <entry key="Rust" value="25701" />
+          <entry key="Rust" value="26215" />
           <entry key="TOML file" value="2" />
         </counts>
       </usages-collector>
@@ -60,8 +60,21 @@
           <file pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/src/main.rs">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="68">
-                  <caret line="4" column="8" selection-start-line="4" selection-start-column="8" selection-end-line="4" selection-end-column="8" />
+                <state relative-caret-position="187">
+                  <caret line="11" column="21" selection-start-line="11" selection-start-column="21" selection-end-line="11" selection-end-column="21" />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file pinned="false" current-in-tab="true">
+            <entry file="file://$PROJECT_DIR$/src/serial_interface.rs">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="153">
+                  <caret line="9" column="69" lean-forward="true" selection-start-line="9" selection-start-column="69" selection-end-line="9" selection-end-column="69" />
+                  <folding>
+                    <element signature="e#114#115#0" expanded="true" />
+                    <element signature="e#130#131#0" expanded="true" />
+                  </folding>
                 </state>
               </provider>
             </entry>
@@ -112,17 +125,17 @@
           <file pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/src/mem_map.rs">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="221">
-                  <caret line="13" column="46" selection-start-line="13" selection-start-column="46" selection-end-line="13" selection-end-column="46" />
+                <state relative-caret-position="641">
+                  <caret line="72" selection-start-line="72" selection-end-line="72" />
                 </state>
               </provider>
             </entry>
           </file>
-          <file pinned="false" current-in-tab="true">
+          <file pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/src/cpu/opcode.rs">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="374">
-                  <caret line="22" column="35" selection-start-line="22" selection-start-column="35" selection-end-line="22" selection-end-column="35" />
+                <state>
+                  <caret column="22" selection-start-column="22" selection-end-column="22" />
                 </state>
               </provider>
             </entry>
@@ -144,11 +157,11 @@
       </split-first>
       <split-second>
         <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-          <file pinned="false" current-in-tab="true">
+          <file pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/src/cpu/cpu.rs">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="284">
-                  <caret line="75" column="67" selection-start-line="75" selection-start-column="67" selection-end-line="75" selection-end-column="67" />
+                <state relative-caret-position="556">
+                  <caret line="91" column="40" lean-forward="true" selection-start-line="91" selection-start-column="40" selection-end-line="91" selection-end-column="40" />
                 </state>
               </provider>
             </entry>
@@ -198,11 +211,11 @@
               </provider>
             </entry>
           </file>
-          <file pinned="false" current-in-tab="false">
+          <file pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/src/interconnect.rs">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="204">
-                  <caret line="39" column="62" selection-start-line="39" selection-start-column="62" selection-end-line="39" selection-end-column="62" />
+                <state relative-caret-position="185">
+                  <caret line="56" column="61" selection-start-line="56" selection-start-column="61" selection-end-line="56" selection-end-column="61" />
                 </state>
               </provider>
             </entry>
@@ -237,13 +250,14 @@
         <option value="$PROJECT_DIR$/src/cpu/cp0/cp0.rs" />
         <option value="$PROJECT_DIR$/src/peripheral_interface.rs" />
         <option value="$PROJECT_DIR$/src/n64.rs" />
-        <option value="$PROJECT_DIR$/src/main.rs" />
-        <option value="$PROJECT_DIR$/src/mem_map.rs" />
-        <option value="$PROJECT_DIR$/src/interconnect.rs" />
         <option value="$PROJECT_DIR$/src/pif.rs" />
         <option value="$PROJECT_DIR$/src/cpu/instruction.rs" />
         <option value="$PROJECT_DIR$/src/cpu/opcode.rs" />
         <option value="$PROJECT_DIR$/src/cpu/cpu.rs" />
+        <option value="$PROJECT_DIR$/src/main.rs" />
+        <option value="$PROJECT_DIR$/src/mem_map.rs" />
+        <option value="$PROJECT_DIR$/src/interconnect.rs" />
+        <option value="$PROJECT_DIR$/src/serial_interface.rs" />
       </list>
     </option>
   </component>
@@ -278,19 +292,6 @@
               <item name="rusty64" type="b2602c69:ProjectViewProjectNode" />
               <item name="rusty64" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="rusty64" type="b2602c69:ProjectViewProjectNode" />
-              <item name="rusty64" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="cpu" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="rusty64" type="b2602c69:ProjectViewProjectNode" />
-              <item name="rusty64" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="cpu" type="462c0819:PsiDirectoryNode" />
-              <item name="cp0" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -341,12 +342,12 @@
       <workItem from="1536344712640" duration="22843000" />
       <workItem from="1536373039784" duration="14935000" />
       <workItem from="1536437825153" duration="19610000" />
-      <workItem from="1536532878765" duration="3611000" />
+      <workItem from="1536532878765" duration="4354000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="98667000" />
+    <option name="totallyTimeSpent" value="99410000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-1208" y="-8" width="1216" height="1896" extended-state="6" />
@@ -412,23 +413,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/audio_interface.rs">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="238">
-          <caret line="20" column="41" selection-start-line="20" selection-start-column="41" selection-end-line="20" selection-end-column="41" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/video_interface.rs">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="153">
-          <caret line="9" column="40" selection-start-line="9" selection-start-column="40" selection-end-line="9" selection-end-column="40" />
-          <folding>
-            <element signature="e#237#238#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/rsp.rs">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="476">
@@ -468,24 +452,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main.rs">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="68">
-          <caret line="4" column="8" selection-start-line="4" selection-start-column="8" selection-end-line="4" selection-end-column="8" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/n64.rs">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="204">
           <caret line="12" column="13" selection-start-line="12" selection-start-column="13" selection-end-line="12" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/interconnect.rs">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="204">
-          <caret line="39" column="62" selection-start-line="39" selection-start-column="62" selection-end-line="39" selection-end-column="62" />
         </state>
       </provider>
     </entry>
@@ -500,13 +470,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/mem_map.rs">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="221">
-          <caret line="13" column="46" selection-start-line="13" selection-start-column="46" selection-end-line="13" selection-end-column="46" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/cpu/instruction.rs">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="284">
@@ -514,17 +477,66 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/cpu/opcode.rs">
+    <entry file="file://$PROJECT_DIR$/src/cpu/cpu.rs">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="374">
-          <caret line="22" column="35" selection-start-line="22" selection-start-column="35" selection-end-line="22" selection-end-column="35" />
+        <state relative-caret-position="556">
+          <caret line="91" column="40" lean-forward="true" selection-start-line="91" selection-start-column="40" selection-end-line="91" selection-end-column="40" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/cpu/cpu.rs">
+    <entry file="file://$PROJECT_DIR$/src/cpu/opcode.rs">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="284">
-          <caret line="75" column="67" selection-start-line="75" selection-start-column="67" selection-end-line="75" selection-end-column="67" />
+        <state>
+          <caret column="22" selection-start-column="22" selection-end-column="22" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main.rs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="187">
+          <caret line="11" column="21" selection-start-line="11" selection-start-column="21" selection-end-line="11" selection-end-column="21" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/audio_interface.rs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="238">
+          <caret line="20" column="41" selection-start-line="20" selection-start-column="41" selection-end-line="20" selection-end-column="41" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/mem_map.rs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="641">
+          <caret line="72" selection-start-line="72" selection-end-line="72" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/video_interface.rs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="153">
+          <caret line="9" column="40" selection-start-line="9" selection-start-column="40" selection-end-line="9" selection-end-column="40" />
+          <folding>
+            <element signature="e#237#238#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/interconnect.rs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="185">
+          <caret line="56" column="61" selection-start-line="56" selection-start-column="61" selection-end-line="56" selection-end-column="61" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/serial_interface.rs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="153">
+          <caret line="9" column="69" lean-forward="true" selection-start-line="9" selection-start-column="69" selection-end-line="9" selection-end-column="69" />
+          <folding>
+            <element signature="e#114#115#0" expanded="true" />
+            <element signature="e#130#131#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

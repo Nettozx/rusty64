@@ -4,6 +4,7 @@ use super::rsp::Rsp;
 use super::audio_interface::AudioInterface;
 use super::video_interface::VideoInterface;
 use super::peripheral_interface::PeripheralInterface;
+use super::serial_interface::SerialInterface;
 
 use std::fmt;
 
@@ -16,6 +17,7 @@ pub struct Interconnect {
     ai: AudioInterface,
     vi: VideoInterface,
     pi: PeripheralInterface,
+    si: SerialInterface,
     ram: Box<[u16]>
 }
 
@@ -27,6 +29,7 @@ impl Interconnect {
             ai: AudioInterface::default(),
             vi: VideoInterface::default(),
             pi: PeripheralInterface::default(),
+            si: SerialInterface::default(),
             ram: vec![0; RAM_SIZE].into_boxed_slice(),
         }
     }
@@ -50,6 +53,8 @@ impl Interconnect {
             Addr::ViHStartReg   => self.vi.read_h_start_reg(),
 
             Addr::PiStatusReg   => self.pi.read_status_reg(),
+
+            Addr::SiStatusReg   => self.si.read_status_reg(),
         }
     }
 
@@ -71,6 +76,8 @@ impl Interconnect {
             Addr::ViHStartReg   => self.vi.write_h_start_reg(value),
 
             Addr::PiStatusReg   => self.pi.write_status_reg(value),
+
+            Addr::SiStatusReg   => self.si.write_status_reg(value),
         }
     }
 }

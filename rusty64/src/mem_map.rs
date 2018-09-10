@@ -26,6 +26,9 @@ const VI_H_START_REG: u32       = 0x0440_0024;
 const PI_BASE_REG: u32          = 0x0460_0000;
 const PI_STATUS_REG: u32        = 0x0460_0010;
 
+const SI_BASE_REG: u32          = 0x0480_0000;
+const SI_STATUS_REG: u32        = 0x0480_0018;
+
 pub enum Addr {
     PifRom(u32),
     PifRam(u32),
@@ -42,13 +45,15 @@ pub enum Addr {
     ViHStartReg,
 
     PiStatusReg,
+
+    SiStatusReg,
 }
 
 pub fn map_addr(addr: u32) -> Addr {
     //look at n64 memory map txt for PIF_ROM start and end
     match addr {
         PIF_ROM_START...PIF_ROM_END => Addr::PifRom(addr - PIF_ROM_START),
-        PIF_RAM_START...PIF_RAM_END => Addr::PifRom(addr - PIF_RAM_START),
+        PIF_RAM_START...PIF_RAM_END => Addr::PifRam(addr - PIF_RAM_START),
 
         SP_IMEM_START...SP_IMEM_END => Addr::SpImem(addr - SP_IMEM_START),
 
@@ -63,6 +68,9 @@ pub fn map_addr(addr: u32) -> Addr {
         VI_H_START_REG => Addr::ViHStartReg,
 
         PI_STATUS_REG => Addr::PiStatusReg,
+
+        SI_STATUS_REG => Addr::SiStatusReg,
+
         _ => panic!("Unrecognized physical address: {:#x}", addr)
     }
 }
