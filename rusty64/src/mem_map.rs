@@ -25,6 +25,10 @@ const VI_H_START_REG: u32       = 0x0440_0024;
 
 const PI_BASE_REG: u32          = 0x0460_0000;
 const PI_STATUS_REG: u32        = 0x0460_0010;
+const PI_BSD_DOM1_LAT_REG: u32  = 0x0460_0014;
+const PI_BSD_DOM1_PWD_REG: u32  = 0x0460_0018;
+const PI_BSD_DOM1_PGS_REG: u32  = 0x0460_001c;
+const PI_BSD_DOM1_RLS_REG: u32  = 0x0460_0020;
 
 const SI_BASE_REG: u32          = 0x0480_0000;
 const SI_STATUS_REG: u32        = 0x0480_0018;
@@ -45,6 +49,10 @@ pub enum Addr {
     ViHStartReg,
 
     PiStatusReg,
+    PiBsdDom1LatReg,
+    PiBsdDom1PwdReg,
+    PiBsdDom1PgsReg,
+    PiBsdDom1RlsReg,
 
     SiStatusReg,
 }
@@ -68,6 +76,10 @@ pub fn map_addr(addr: u32) -> Addr {
         VI_H_START_REG => Addr::ViHStartReg,
 
         PI_STATUS_REG => Addr::PiStatusReg,
+        PI_BSD_DOM1_LAT_REG => Addr::PiBsdDom1LatReg,
+        PI_BSD_DOM1_PWD_REG => Addr::PiBsdDom1PwdReg,
+        PI_BSD_DOM1_PGS_REG => Addr::PiBsdDom1PgsReg,
+        PI_BSD_DOM1_RLS_REG => Addr::PiBsdDom1RlsReg,
 
         SI_STATUS_REG => Addr::SiStatusReg,
 
