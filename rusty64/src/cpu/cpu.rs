@@ -122,8 +122,8 @@ impl Cpu {
                 MULTU => {
                     //MULTU page 481
                     //TODO undefined if last 2 instr were MFHI or MFLO
-                    let rs = self.read_reg_gpr(instr.rs());
-                    let rt = self.read_reg_gpr(instr.rt());
+                    let rs = self.read_reg_gpr(instr.rs()) as u32;
+                    let rt = self.read_reg_gpr(instr.rt()) as u32;
 
                     //sign extend product
                     let res = ((rs.wrapping_mul(rt)) as i32) as u64;
