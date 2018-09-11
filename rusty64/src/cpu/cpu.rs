@@ -122,24 +122,31 @@ impl Cpu {
                 MULTU => {
                     //MULTU page 481
                     //TODO undefined if last 2 instr were MFHI or MFLO
-                    let rs = instr.rs() as u32;
-                    let rt = instr.rt() as u32;
+                    let rs = self.read_reg_gpr(instr.rs());
+                    let rt = self.read_reg_gpr(instr.rt());
+
                     //sign extend product
-                    let res = ((rs * rt) as i32) as u64;
+                    let res = ((rs.wrapping_mul(rt)) as i32) as u64;
                     self.reg_lo = (res as i32) as u64;
                     self.reg_hi = ((res >> 32) as i32) as u64;
                 },
                 ADDU => {
-                    let rs = instr.rs() as u32;
-                    let rt = instr.rt() as u32;
+                    let rs = self.read_reg_gpr(instr.rs());
+                    let rt = self.read_reg_gpr(instr.rt());
                     let value = (rs.wrapping_add(rt) as i32) as u64;
                     self.write_reg_gpr(instr.rd() as usize, value);
                 },
                 SUBU => {
                     //SUBU page 514
-                    let rs = instr.rs();
-                    let rt = instr.rt();
+                    let rs = self.read_reg_gpr(instr.rs());
+                    let rt = self.read_reg_gpr(instr.rt());
                     let value = (rs.wrapping_sub(rt) as i32) as u64;
+                    self.write_reg_gpr(instr.rd() as usize, value);
+                },
+                AND => {
+                    //AND page 375
+                    let value = self.read_reg_gpr(instr.rs()) &
+                        self.read_reg_gpr(instr.rt());
                     self.write_reg_gpr(instr.rd() as usize, value);
                 },
                 OR => {
@@ -156,8 +163,8 @@ impl Cpu {
                 },
                 SLTU => {
                     //SLTU page 508, ignored subtraction made no sense
-                    let rs = instr.rs();
-                    let rt = instr.rt();
+                    let rs = self.read_reg_gpr(instr.rs());
+                    let rt = self.read_reg_gpr(instr.rt());
                     let value = if rs < rt { 1 } else { 0 };
                     self.write_reg_gpr(instr.rd() as usize, value);
                 },
@@ -170,7 +177,8 @@ impl Cpu {
             },
             ADDI => {
                 //ADDI page 372
-                let  rs_positive = (self.read_reg_gpr(instr.rs()) >> 31) & 1 == 0;
+                //handle overflow
+                let rs_positive = (self.read_reg_gpr(instr.rs()) >> 31) & 1 == 0;
                 let imm_positive = (instr.imm_sign_extended() >> 31) & 1 == 0;
                 let res = self.read_reg_gpr(instr.rs()).wrapping_add(instr.imm_sign_extended());
                 let res_positive = (res >> 31 & 1) == 0;

@@ -31,6 +31,7 @@ pub enum SpecialOpcode {
         MULTU = 0b01_1001, //page 481
         ADDU  = 0b10_0001, //page 374
         SUBU  = 0b10_0011, //page 514
+        AND   = 0b10_0100, //page 375
         OR    = 0b10_0101, //page 484
         XOR   = 0b10_0110, //page 542
         SLTU  = 0b10_1011, //page 508
