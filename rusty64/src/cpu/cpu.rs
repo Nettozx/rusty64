@@ -55,7 +55,7 @@ impl Cpu {
     pub fn run_instruction(&mut self) {
         let instr = self.read_instruction(self.reg_pc);
 
-        println!("reg_pc: {:#018X}: {:?}", self.reg_pc, instr);
+        self.print_instr(instr, self.reg_pc, false);
 
         //increment prog counter
         self.reg_pc += 4;
@@ -106,8 +106,7 @@ impl Cpu {
                     //Update PC before executing delay slot instruction
                     self.reg_pc = self.read_reg_gpr(instr.rs());
 
-                    let delay_slot_instr = self.read_instruction(delay_slot_pc);
-                    self.execute_instruction(delay_slot_instr);
+                    self.execute_delay_slot(delay_slot_pc);
                 },
                 MFHI => {
                     //MFHI page 472
@@ -126,7 +125,7 @@ impl Cpu {
                     let rt = self.read_reg_gpr(instr.rt()) as u32;
 
                     //sign extend product
-                    let res = ((rs.wrapping_mul(rt)) as i32) as u64;
+                    let res = (rs as u64) * (rt as u64);
                     self.reg_lo = (res as i32) as u64;
                     self.reg_hi = ((res >> 32) as i32) as u64;
                 },
@@ -263,6 +262,12 @@ impl Cpu {
         }
     }
 
+    fn execute_delay_slot(&mut self, delay_slot_pc: u64) {
+        let delay_slot_instr = self.read_instruction(delay_slot_pc);
+        self.print_instr(delay_slot_instr, delay_slot_pc, true);
+        self.execute_instruction(delay_slot_instr);
+    }
+
     //branch lambda expression
     fn branch<F>(&mut self, instr: Instruction, write_link: bool, f: F) -> bool
         where F: FnOnce(u64, u64) -> bool {
@@ -283,8 +288,7 @@ impl Cpu {
             //Update PC before executing delay slot instruction
             self.reg_pc = self.reg_pc.wrapping_add(sign_extended_offset);
             //TODO make this safer cause it can stack overflow
-            let delay_slot_instr = self.read_instruction(delay_slot_pc);
-            self.execute_instruction(delay_slot_instr);
+            self.execute_delay_slot(delay_slot_pc);
         }
 
         is_taken
@@ -332,6 +336,26 @@ impl Cpu {
         match index {
             0 => 0,
             _ => self.reg_gpr[index]
+        }
+    }
+
+    fn print_instr(&self, instr: Instruction, pc: u64, delay: bool) {
+        print!("reg_pc {:018X}: ", pc);
+        match instr.opcode() {
+            SPECIAL => {
+                print!("{:?}(S)", instr.special_op());
+            },
+            REGIMM => {
+                print!("{:?}(R)", instr.reg_imm_op());
+            },
+            _ => {
+                print!("{:?}", instr);
+            }
+        }
+        if delay {
+            println!("(D)");
+        } else {
+            println!();
         }
     }
 }
