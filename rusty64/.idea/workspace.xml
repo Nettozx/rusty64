@@ -40,7 +40,7 @@
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
-          <entry key="rs" value="29848" />
+          <entry key="rs" value="29905" />
           <entry key="toml" value="54" />
         </counts>
       </usages-collector>
@@ -48,7 +48,7 @@
         <counts>
           <entry key="Android RenderScript" value="82" />
           <entry key="PLAIN_TEXT" value="52" />
-          <entry key="Rust" value="29766" />
+          <entry key="Rust" value="29823" />
           <entry key="TOML file" value="2" />
         </counts>
       </usages-collector>
@@ -111,11 +111,11 @@
               </provider>
             </entry>
           </file>
-          <file pinned="false" current-in-tab="true">
+          <file pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/src/video_interface.rs">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="476">
-                  <caret line="32" column="52" selection-start-line="32" selection-start-column="52" selection-end-line="32" selection-end-column="52" />
+                <state relative-caret-position="459">
+                  <caret line="31" column="39" selection-start-line="31" selection-start-column="39" selection-end-line="31" selection-end-column="39" />
                   <folding>
                     <element signature="e#198#199#0" expanded="true" />
                     <element signature="e#237#238#0" expanded="true" />
@@ -142,11 +142,11 @@
               </provider>
             </entry>
           </file>
-          <file pinned="false" current-in-tab="false">
+          <file pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/src/cpu/opcode.rs">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="578">
-                  <caret line="34" column="26" selection-start-line="34" selection-start-column="26" selection-end-line="34" selection-end-column="26" />
+                <state relative-caret-position="391">
+                  <caret line="23" column="55" selection-start-line="23" selection-start-column="55" selection-end-line="23" selection-end-column="55" />
                 </state>
               </provider>
             </entry>
@@ -171,8 +171,8 @@
           <file pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/src/cpu/cpu.rs">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="474">
-                  <caret line="174" column="61" lean-forward="true" selection-start-line="174" selection-start-column="61" selection-end-line="174" selection-end-column="61" />
+                <state relative-caret-position="236">
+                  <caret line="234" column="37" selection-start-line="234" selection-start-column="37" selection-end-line="234" selection-end-column="37" />
                 </state>
               </provider>
             </entry>
@@ -279,9 +279,9 @@
         <option value="$PROJECT_DIR$/src/mem_map.rs" />
         <option value="$PROJECT_DIR$/src/rsp.rs" />
         <option value="$PROJECT_DIR$/src/interconnect.rs" />
-        <option value="$PROJECT_DIR$/src/cpu/opcode.rs" />
         <option value="$PROJECT_DIR$/src/cpu/instruction.rs" />
         <option value="$PROJECT_DIR$/src/cpu/cpu.rs" />
+        <option value="$PROJECT_DIR$/src/cpu/opcode.rs" />
       </list>
     </option>
   </component>
@@ -327,7 +327,7 @@
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1536628920777" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1536629126000" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/Cargo.toml" />
     <property name="org.rust.cargo.project.model.PROJECT_DISCOVERY" value="true" />
     <property name="run.code.analysis.last.selected.profile" value="pProject Default" />
@@ -367,12 +367,12 @@
       <workItem from="1536373039784" duration="14935000" />
       <workItem from="1536437825153" duration="19610000" />
       <workItem from="1536532878765" duration="9041000" />
-      <workItem from="1536606685269" duration="11500000" />
+      <workItem from="1536606685269" duration="11707000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="115597000" />
+    <option name="totallyTimeSpent" value="115804000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-1208" y="-8" width="1216" height="1896" extended-state="6" />
@@ -541,13 +541,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/cpu/opcode.rs">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="578">
-          <caret line="34" column="26" selection-start-line="34" selection-start-column="26" selection-end-line="34" selection-end-column="26" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/cpu/instruction.rs">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="539">
@@ -559,10 +552,17 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/cpu/cpu.rs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="236">
+          <caret line="234" column="37" selection-start-line="234" selection-start-column="37" selection-end-line="234" selection-end-column="37" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/video_interface.rs">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="476">
-          <caret line="32" column="52" selection-start-line="32" selection-start-column="52" selection-end-line="32" selection-end-column="52" />
+        <state relative-caret-position="459">
+          <caret line="31" column="39" selection-start-line="31" selection-start-column="39" selection-end-line="31" selection-end-column="39" />
           <folding>
             <element signature="e#198#199#0" expanded="true" />
             <element signature="e#237#238#0" expanded="true" />
@@ -570,10 +570,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/cpu/cpu.rs">
+    <entry file="file://$PROJECT_DIR$/src/cpu/opcode.rs">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="474">
-          <caret line="174" column="61" lean-forward="true" selection-start-line="174" selection-start-column="61" selection-end-line="174" selection-end-column="61" />
+        <state relative-caret-position="391">
+          <caret line="23" column="55" selection-start-line="23" selection-start-column="55" selection-end-line="23" selection-end-column="55" />
         </state>
       </provider>
     </entry>

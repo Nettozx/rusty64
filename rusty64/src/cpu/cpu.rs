@@ -71,6 +71,12 @@ impl Cpu {
         //section 16.6 of datasheet
         match instr.opcode() {
             SPECIAL => match instr.special_op() {
+                SLL => {
+                    //SRL page 503
+                    let value = self.read_reg_gpr(instr.rt()) << instr.sa();
+                    let sign_extended_value = (value as i32) as u64;
+                    self.write_reg_gpr(instr.rd() as usize, sign_extended_value);
+                },
                 SRL => {
                     //SRL page 511
                     let value = self.read_reg_gpr(instr.rt()) >> instr.sa();

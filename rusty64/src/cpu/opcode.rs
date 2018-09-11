@@ -21,6 +21,7 @@ enum_from_primitive! {
 enum_from_primitive! {
 #[derive(Debug)]
 pub enum SpecialOpcode {
+        SLL   = 0b00_0000, //page 503, same code as NOP
         SRL   = 0b00_0010, //page 511
         JR    = 0b00_1000, //page 438
         MFLO  = 0b01_0010, //page 473
