@@ -26,7 +26,7 @@ pub struct Cpu {
 
     cp0: cp0::Cp0,
 
-    interconnect: interconnect::Interconnect
+    interconnect: interconnect::Interconnect,
 }
 
 impl Cpu {
@@ -77,27 +77,39 @@ impl Cpu {
                     let value = self.read_reg_gpr(instr.rt()) << instr.sa();
                     let sign_extended_value = (value as i32) as u64;
                     self.write_reg_gpr(instr.rd() as usize, sign_extended_value);
-                },
+                }
                 SRL => {
                     //SRL page 511
                     let value = self.read_reg_gpr(instr.rt()) >> instr.sa();
                     let sign_extended_value = (value as i32) as u64;
                     self.write_reg_gpr(instr.rd() as usize, sign_extended_value);
-                },
+                }
                 SLLV => {
                     //SLLV page 504
-                    let shift = self.read_reg_gpr(instr.rs()) & 0b11111;
-                    let value = self.read_reg_gpr(instr.rt()) << shift;
-                    let sign_extended_value = (value as i32) as u64;
-                    self.write_reg_gpr(instr.rd() as usize, sign_extended_value);
-                },
+                    self.reg_instr(instr,|rs,rt| {
+                        let shift = rs & 0b11111;
+                        rt << shift
+                    })
+
+//                    let shift = self.read_reg_gpr(instr.rs()) & 0b11111;
+//                    let value = self.read_reg_gpr(instr.rt()) << shift;
+//                    let sign_extended_value = (value as i32) as u64;
+//                    self.write_reg_gpr(instr.rd() as usize, sign_extended_value);
+                }
                 SRLV => {
                     //SRLV page 512
-                    let shift = (self.read_reg_gpr(instr.rs()) & 0b11111) as u32;
-                    let value = (self.read_reg_gpr(instr.rt())) as u32 >> shift;
-                    let sign_extended_value = (value as i32) as u64;
-                    self.write_reg_gpr(instr.rd() as usize, sign_extended_value);
-                },
+                    self.reg_instr(instr, |rs,rt| {
+                        let rs = rs as u32;
+                        let rt = rt as u32;
+                        let shift = rs & 0b11111;
+                        (rt >> shift) as u64
+                    })
+
+//                    let shift = (self.read_reg_gpr(instr.rs()) & 0b11111) as u32;
+//                    let value = (self.read_reg_gpr(instr.rt())) as u32 >> shift;
+//                    let sign_extended_value = (value as i32) as u64;
+//                    self.write_reg_gpr(instr.rd() as usize, sign_extended_value);
+                }
                 JR => {
                     //JR page 438
                     //get the old program counter cause it needs delay slot
@@ -107,17 +119,17 @@ impl Cpu {
                     self.reg_pc = self.read_reg_gpr(instr.rs());
 
                     self.execute_delay_slot(delay_slot_pc);
-                },
+                }
                 MFHI => {
                     //MFHI page 472
                     let value = self.reg_hi;
                     self.write_reg_gpr(instr.rd() as usize, value);
-                },
+                }
                 MFLO => {
                     //MFLO page 473
                     let value = self.reg_lo;
                     self.write_reg_gpr(instr.rd() as usize, value);
-                },
+                }
                 MULTU => {
                     //MULTU page 481
                     //TODO undefined if last 2 instr were MFHI or MFLO
@@ -128,50 +140,68 @@ impl Cpu {
                     let res = (rs as u64) * (rt as u64);
                     self.reg_lo = (res as i32) as u64;
                     self.reg_hi = ((res >> 32) as i32) as u64;
-                },
+                }
                 ADDU => {
-                    let rs = self.read_reg_gpr(instr.rs());
-                    let rt = self.read_reg_gpr(instr.rt());
-                    let value = (rs.wrapping_add(rt) as i32) as u64;
-                    self.write_reg_gpr(instr.rd() as usize, value);
-                },
+                    self.reg_instr(instr, |rs,rt| {
+                        rs.wrapping_add(rt)
+                    })
+//                    let rs = self.read_reg_gpr(instr.rs());
+//                    let rt = self.read_reg_gpr(instr.rt());
+//                    let value = (rs.wrapping_add(rt) as i32) as u64;
+//                    self.write_reg_gpr(instr.rd() as usize, value);
+                }
                 SUBU => {
                     //SUBU page 514
-                    let rs = self.read_reg_gpr(instr.rs());
-                    let rt = self.read_reg_gpr(instr.rt());
-                    let value = (rs.wrapping_sub(rt) as i32) as u64;
-                    self.write_reg_gpr(instr.rd() as usize, value);
-                },
+                    self.reg_instr(instr, |rs, rt| {
+                        rs.wrapping_sub(rt)
+                    })
+//                    let rs = self.read_reg_gpr(instr.rs());
+//                    let rt = self.read_reg_gpr(instr.rt());
+//                    let value = (rs.wrapping_sub(rt) as i32) as u64;
+//                    self.write_reg_gpr(instr.rd() as usize, value);
+                }
                 AND => {
                     //AND page 375
-                    let value = self.read_reg_gpr(instr.rs()) &
-                        self.read_reg_gpr(instr.rt());
-                    self.write_reg_gpr(instr.rd() as usize, value);
-                },
+                    self.reg_instr(instr, |rs, rt| {
+                        rs & rt
+                    })
+//                    let value = self.read_reg_gpr(instr.rs()) &
+//                        self.read_reg_gpr(instr.rt());
+//                    self.write_reg_gpr(instr.rd() as usize, value);
+                }
                 OR => {
                     //OR page 484
-                    let value = self.read_reg_gpr(instr.rs()) |
-                        self.read_reg_gpr(instr.rt());
-                    self.write_reg_gpr(instr.rd() as usize, value);
-                },
+                    self.reg_instr(instr, |rs, rt| {
+                        rs | rt
+                    })
+//                    let value = self.read_reg_gpr(instr.rs()) |
+//                        self.read_reg_gpr(instr.rt());
+//                    self.write_reg_gpr(instr.rd() as usize, value);
+                }
                 XOR => {
                     //XOR page 542
-                    let value = self.read_reg_gpr(instr.rs()) ^
-                        self.read_reg_gpr(instr.rt());
-                    self.write_reg_gpr(instr.rd() as usize, value);
-                },
+                    self.reg_instr(instr, |rs, rt| {
+                        rs ^ rt
+                    })
+//                    let value = self.read_reg_gpr(instr.rs()) ^
+//                        self.read_reg_gpr(instr.rt());
+//                    self.write_reg_gpr(instr.rd() as usize, value);
+                }
                 SLTU => {
                     //SLTU page 508, ignored subtraction made no sense
-                    let rs = self.read_reg_gpr(instr.rs());
-                    let rt = self.read_reg_gpr(instr.rt());
-                    let value = if rs < rt { 1 } else { 0 };
-                    self.write_reg_gpr(instr.rd() as usize, value);
-                },
+                    self.reg_instr(instr, |rs, rt| {
+                        if rs < rt { 1 } else { 0 }
+                    })
+//                    let rs = self.read_reg_gpr(instr.rs());
+//                    let rt = self.read_reg_gpr(instr.rt());
+//                    let value = if rs < rt { 1 } else { 0 };
+//                    self.write_reg_gpr(instr.rd() as usize, value);
+                }
             },
             REGIMM => match instr.reg_imm_op() {
                 BGEZAL => {
                     //BGEZAL page 388
-                    self.branch(instr,true, |rs, _| (rs as i64) >= 0);
+                    self.branch(instr, true, |rs, _| (rs as i64) >= 0);
                 }
             },
             ADDI => {
@@ -185,59 +215,59 @@ impl Cpu {
                     (true, true, false) => {
                         panic!("Integer overflow exception not implemented! (p+p=n) {:016X} + \
                         {:016X} != {:016X}", instr.rs(), instr.imm_sign_extended(), res)
-                    },
+                    }
                     (false, false, true) => {
                         panic!("Integer overflow exception not implemented! (n+n=p) {:016X} + \
                         {:016X} != {:016X}", instr.rs(), instr.imm_sign_extended(), res)
-                    },
+                    }
                     _ => {}
                 }
 
                 //let res = self.read_reg_gpr(instr.rs()) + instr.imm_sign_extended();
                 self.write_reg_gpr(instr.rt(), res)
-            },
+            }
             ADDIU => {
                 //ADDIU page 373
                 //the same as ADDI but it cannot overflow
                 let res = self.read_reg_gpr(instr.rs())
                     .wrapping_add(instr.imm_sign_extended());
                 self.write_reg_gpr(instr.rt(), res)
-            },
+            }
             ANDI => {
                 //ANDI page 376
                 let res = self.read_reg_gpr(instr.rs()) & (instr.imm() as u64);
                 self.write_reg_gpr(instr.rt(), res);
-            },
+            }
             ORI => {
                 //ORI page 485
                 let res = self.read_reg_gpr(instr.rs()) | (instr.imm() as u64);
                 self.write_reg_gpr(instr.rt(), res);
-            },
+            }
             LUI => {
                 //LUI page 456
                 //sign extend for upper 32 bits
                 let value = ((instr.imm() << 16) as i32) as u64;
-                self.write_reg_gpr(instr.rt(), value );
-            },
+                self.write_reg_gpr(instr.rt(), value);
+            }
             MTC0 => {
                 //MTC0 page 474
                 let data = self.read_reg_gpr(instr.rt());
                 self.cp0.write_reg(instr.rd(), data);
-            },
+            }
             BEQ => {
-                self.branch(instr, false,|rs, rt| rs == rt);
-            },
+                self.branch(instr, false, |rs, rt| rs == rt);
+            }
             BNE => {
                 self.branch(instr, false, |rs, rt| rs != rt);
             }
             BEQL => {
                 //BEQL, BEQZL is the same but with zero filled in already - page 386
                 self.branch_likely(instr, |rs, rt| rs == rt);
-            },
+            }
             BNEL => {
                 //BNEL, BNEZL is the same but with zero filled in already - page 400
                 self.branch_likely(instr, |rs, rt| rs != rt);
-            },
+            }
             LW => {
                 //LW page 458
                 let base = instr.rs();
@@ -247,7 +277,7 @@ impl Cpu {
                     self.read_reg_gpr(base).wrapping_add(sign_extended_offset);
                 let mem = (self.read_word(virt_addr) as i32) as u64;
                 self.write_reg_gpr(instr.rt(), mem);
-            },
+            }
             SW => {
                 //SW page 515
                 let base = instr.rs();
@@ -266,6 +296,16 @@ impl Cpu {
         let delay_slot_instr = self.read_instruction(delay_slot_pc);
         self.print_instr(delay_slot_instr, delay_slot_pc, true);
         self.execute_instruction(delay_slot_instr);
+    }
+
+
+    fn reg_instr<F>(&mut self, instr: Instruction, f: F) where F: FnOnce(u64, u64) -> u64 {
+        //formatting based on section 1.4.3 in datasheet
+        let rs = self.read_reg_gpr(instr.rs());
+        let rt = self.read_reg_gpr(instr.rt());
+        let value = f(rs, rt);
+        let sign_extended_value = (value as i32) as u64;
+        self.write_reg_gpr(instr.rd() as usize, sign_extended_value);
     }
 
     //branch lambda expression
@@ -290,7 +330,6 @@ impl Cpu {
             //TODO make this safer cause it can stack overflow
             self.execute_delay_slot(delay_slot_pc);
         }
-
         is_taken
     }
 
@@ -342,21 +381,11 @@ impl Cpu {
     fn print_instr(&self, instr: Instruction, pc: u64, delay: bool) {
         print!("reg_pc {:018X}: ", pc);
         match instr.opcode() {
-            SPECIAL => {
-                print!("{:?}(S)", instr.special_op());
-            },
-            REGIMM => {
-                print!("{:?}(R)", instr.reg_imm_op());
-            },
-            _ => {
-                print!("{:?}", instr);
-            }
+            SPECIAL => print!("{:?}(S)", instr.special_op()),
+            REGIMM => print!("{:?}(R)", instr.reg_imm_op()),
+            _ => print!("{:?}", instr)
         }
-        if delay {
-            println!("(D)");
-        } else {
-            println!();
-        }
+        if delay { println!("(D)") } else { println!() }
     }
 }
 
