@@ -24,9 +24,12 @@ pub enum SpecialOpcode {
         SLL   = 0b00_0000, //page 503, same code as NOP
         SRL   = 0b00_0010, //page 511
         JR    = 0b00_1000, //page 438
+        MFHI  = 0b01_0000, //page 472
         MFLO  = 0b01_0010, //page 473
         MULTU = 0b01_1001, //page 481
+        SUBU  = 0b10_0011, //page 514
         OR    = 0b10_0101, //page 484
+        XOR   = 0b10_0110, //page 542
     }
 }
 

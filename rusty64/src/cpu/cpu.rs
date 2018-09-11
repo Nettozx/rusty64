@@ -73,6 +73,7 @@ impl Cpu {
             SPECIAL => match instr.special_op() {
                 SLL => {
                     //SRL page 503
+                    //if sa == 0 then shifting by 0 is same as doing nothing, hence NOP
                     let value = self.read_reg_gpr(instr.rt()) << instr.sa();
                     let sign_extended_value = (value as i32) as u64;
                     self.write_reg_gpr(instr.rd() as usize, sign_extended_value);
@@ -94,6 +95,11 @@ impl Cpu {
                     let delay_slot_instr = self.read_instruction(delay_slot_pc);
                     self.execute_instruction(delay_slot_instr);
                 },
+                MFHI => {
+                    //MFHI page 472
+                    let value = self.reg_hi;
+                    self.write_reg_gpr(instr.rd() as usize, value);
+                },
                 MFLO => {
                     //MFLO page 473
                     let value = self.reg_lo;
@@ -109,11 +115,25 @@ impl Cpu {
                     self.reg_lo = (res as i32) as u64;
                     self.reg_hi = ((res >> 32) as i32) as u64;
                 },
+                SUBU => {
+                    //SUBU page 514
+                    let rs = instr.rs();
+                    let rt = instr.rt();
+                    let value = (rs.wrapping_sub(rt) as i32) as u64;
+                    self.write_reg_gpr(instr.rd() as usize, value);
+                },
                 OR => {
+                    //OR page 484
                     let value = self.read_reg_gpr(instr.rs()) |
                         self.read_reg_gpr(instr.rt());
                     self.write_reg_gpr(instr.rd() as usize, value);
-                }
+                },
+                XOR => {
+                    //XOR page 542
+                    let value = self.read_reg_gpr(instr.rs()) ^
+                        self.read_reg_gpr(instr.rt());
+                    self.write_reg_gpr(instr.rd() as usize, value);
+                },
             },
             REGIMM => match instr.reg_imm_op() {
                 BGEZAL => {
