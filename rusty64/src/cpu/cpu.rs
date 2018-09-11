@@ -112,21 +112,7 @@ impl Cpu {
             REGIMM => match instr.reg_imm_op() {
                 BGEZAL => {
                     //BGEZAL page 388
-                    let rs = self.read_reg_gpr(instr.rs());
-                    let is_taken = (rs as i64) >= 0;
-
-                    let delay_slot_pc = self.reg_pc;
-                    let link_address = delay_slot_pc + 4;
-
-                    self.write_reg_gpr(31, link_address);
-                    if is_taken {
-                        let sign_extended_offset = instr.offset_sign_extended() << 2;
-                        //Update PC before executing delay slot instruction
-                        self.reg_pc = self.reg_pc.wrapping_add(sign_extended_offset);
-                        //TODO make this safer cause it can stack overflow
-                        let delay_slot_instr = self.read_instruction(delay_slot_pc);
-                        self.execute_instruction(delay_slot_instr);
-                    }
+                    self.branch(instr,true, |rs, _| (rs as i64) >= 0);
                 }
             },
             ADDI => {
@@ -179,10 +165,10 @@ impl Cpu {
                 self.cp0.write_reg(instr.rd(), data);
             },
             BEQ => {
-                self.branch(instr, |rs, rt| rs == rt);
+                self.branch(instr, false,|rs, rt| rs == rt);
             },
             BNE => {
-                self.branch(instr, |rs, rt| rs != rt);
+                self.branch(instr, false, |rs, rt| rs != rt);
             }
             BEQL => {
                 //BEQL, BEQZL is the same but with zero filled in already - page 386
@@ -217,16 +203,21 @@ impl Cpu {
     }
 
     //branch lambda expression
-    fn branch<F>(&mut self, instr: Instruction, f: F) -> bool
+    fn branch<F>(&mut self, instr: Instruction, write_link: bool, f: F) -> bool
         where F: FnOnce(u64, u64) -> bool {
         let rs = self.read_reg_gpr(instr.rs());
         let rt = self.read_reg_gpr(instr.rt());
         let is_taken = f(rs, rt);
 
-        if is_taken {
-            //get the old program counter cause it needs delay slot
-            let delay_slot_pc = self.reg_pc;
+        //get the old program counter cause it needs delay slot
+        let delay_slot_pc = self.reg_pc;
+        //for regimm instructions
+        if write_link {
+            let link_address = delay_slot_pc + 4;
+            self.write_reg_gpr(31, link_address);
+        }
 
+        if is_taken {
             let sign_extended_offset = instr.offset_sign_extended() << 2;
             //Update PC before executing delay slot instruction
             self.reg_pc = self.reg_pc.wrapping_add(sign_extended_offset);
@@ -241,7 +232,7 @@ impl Cpu {
     //branch likely lambda expression
     fn branch_likely<F>(&mut self, instr: Instruction, f: F)
         where F: FnOnce(u64, u64) -> bool {
-        if !self.branch(instr, f) {
+        if !self.branch(instr, false, f) {
             //skip delay slot when branch not taken
             self.reg_pc = self.reg_pc.wrapping_add(4);
         }
