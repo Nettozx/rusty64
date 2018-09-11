@@ -70,11 +70,6 @@ impl Cpu {
         //section 16.6 of datasheet
         match instr.opcode() {
             SPECIAL => match instr.special_op() {
-                OR => {
-                    let value = self.read_reg_gpr(instr.rs()) |
-                        self.read_reg_gpr(instr.rt());
-                    self.write_reg_gpr(instr.rd() as usize, value);
-                }
                 SRL => {
                     //SRL page 511
                     let value = self.read_reg_gpr(instr.rt()) >> instr.sa();
@@ -82,7 +77,7 @@ impl Cpu {
                     self.write_reg_gpr(instr.rd() as usize, sign_extended_value);
                 },
                 JR => {
-                    //JR page  438
+                    //JR page 438
                     //get the old program counter cause it needs delay slot
                     let delay_slot_pc = self.reg_pc;
 
@@ -92,6 +87,26 @@ impl Cpu {
                     let delay_slot_instr = self.read_instruction(delay_slot_pc);
                     self.execute_instruction(delay_slot_instr);
                 },
+                MFLO => {
+                    //MFLO page 473
+                    let value = self.reg_lo;
+                    self.write_reg_gpr(instr.rd() as usize, value);
+                },
+                MULTU => {
+                    //MULTU page 481
+                    //TODO undefined if last 2 instr were MFHI or MFLO
+                    let rs = instr.rs() as u32;
+                    let rt = instr.rt() as u32;
+                    //sign extend product
+                    let res = ((rs * rt) as i32) as u64;
+                    self.reg_lo = (res as i32) as u64;
+                    self.reg_hi = ((res >> 32) as i32) as u64;
+                },
+                OR => {
+                    let value = self.read_reg_gpr(instr.rs()) |
+                        self.read_reg_gpr(instr.rt());
+                    self.write_reg_gpr(instr.rd() as usize, value);
+                }
             },
             ADDI => {
                 //ADDI page 372

@@ -48,6 +48,7 @@ impl Interconnect {
 
             Addr::CartDom1(offset)=> BigEndian::read_u32(&self.cart_rom[offset as usize..]),
 
+            Addr::SpDmem(offset)  => self.rsp.read_dmem(offset),
             Addr::SpImem(offset)  => self.rsp.read_imem(offset),
 
             Addr::SpStatusReg     => self.rsp.read_status_reg(),
@@ -79,6 +80,7 @@ impl Interconnect {
 
             Addr::CartDom1(offset)=> panic!("Cannot write to CART ROM"),
 
+            Addr::SpDmem(offset)  => self.rsp.write_dmem(offset, value),
             Addr::SpImem(offset)  => self.rsp.write_imem(offset, value),
 
             Addr::SpStatusReg     => self.rsp.write_status_reg(value),
