@@ -2,6 +2,7 @@ enum_from_primitive! {
     #[derive(Debug)]
     pub enum Opcode {
         SPECIAL  = 0b00_0000, //for instructions with special bit code
+        REGIMM   = 0b00_0001, //for instructions with regimm bit code
         ADDI     = 0b00_1000, //page 372
         ADDIU    = 0b00_1001, //page 373
         ANDI     = 0b00_1100, //page 376
@@ -12,7 +13,6 @@ enum_from_primitive! {
         BNE      = 0b00_0101, //page 399
         BEQL     = 0b01_0100, //page 386
         BNEL     = 0b01_0101, //page 400
-
         LW       = 0b10_0011, //page 458
         SW       = 0b10_1011, //page 515
     }
@@ -26,5 +26,12 @@ pub enum SpecialOpcode {
         MFLO  = 0b01_0010, //page 473
         MULTU = 0b01_1001, //page 481
         OR    = 0b10_0101, //page 484
+    }
+}
+
+enum_from_primitive! {
+#[derive(Debug)]
+pub enum RegImmOpcode {
+        BGEZAL = 0b10001, //page 388
     }
 }

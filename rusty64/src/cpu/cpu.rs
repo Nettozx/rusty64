@@ -2,6 +2,7 @@ use super::super::interconnect;
 use super::cp0;
 use super::opcode::Opcode::*;
 use super::opcode::SpecialOpcode::*;
+use super::opcode::RegImmOpcode::*;
 use super::instruction::Instruction;
 
 use std::fmt;
@@ -106,6 +107,26 @@ impl Cpu {
                     let value = self.read_reg_gpr(instr.rs()) |
                         self.read_reg_gpr(instr.rt());
                     self.write_reg_gpr(instr.rd() as usize, value);
+                }
+            },
+            REGIMM => match instr.reg_imm_op() {
+                BGEZAL => {
+                    //BGEZAL page 388
+                    let rs = self.read_reg_gpr(instr.rs());
+                    let is_taken = (rs as i64) >= 0;
+
+                    let delay_slot_pc = self.reg_pc;
+                    let link_address = delay_slot_pc + 4;
+
+                    self.write_reg_gpr(31, link_address);
+                    if is_taken {
+                        let sign_extended_offset = instr.offset_sign_extended() << 2;
+                        //Update PC before executing delay slot instruction
+                        self.reg_pc = self.reg_pc.wrapping_add(sign_extended_offset);
+                        //TODO make this safer cause it can stack overflow
+                        let delay_slot_instr = self.read_instruction(delay_slot_pc);
+                        self.execute_instruction(delay_slot_instr);
+                    }
                 }
             },
             ADDI => {

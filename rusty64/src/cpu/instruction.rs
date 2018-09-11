@@ -60,12 +60,20 @@ impl Instruction {
             || panic!("Unrecognized special opcode: {:#010x} (op:{:#08b})", self.0, value)
         )
     }
+
+    pub fn reg_imm_op(&self) -> RegImmOpcode {
+        let value = (self.0 >> 16) & 0b11111;
+        RegImmOpcode::from_u32(value).unwrap_or_else(
+            || panic!("Unrecognized RegImm opcode: {:#010x} (op:{:#08b})", self.0, value)
+        )
+    }
 }
 
 impl fmt::Debug for Instruction {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         match self.opcode() {
             Opcode::SPECIAL => write!(f, "{:?}", self.special_op()),
+            Opcode::REGIMM => write!(f, "{:?}", self.reg_imm_op()),
             _ => write!(f, "{:?}", self.opcode())
         }
     }
