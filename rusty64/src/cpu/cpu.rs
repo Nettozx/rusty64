@@ -84,6 +84,20 @@ impl Cpu {
                     let sign_extended_value = (value as i32) as u64;
                     self.write_reg_gpr(instr.rd() as usize, sign_extended_value);
                 },
+                SLLV => {
+                    //SLLV page 504
+                    let shift = self.read_reg_gpr(instr.rs()) & 0b11111;
+                    let value = self.read_reg_gpr(instr.rt()) << shift;
+                    let sign_extended_value = (value as i32) as u64;
+                    self.write_reg_gpr(instr.rd() as usize, sign_extended_value);
+                },
+                SRLV => {
+                    //SRLV page 512
+                    let shift = (self.read_reg_gpr(instr.rs()) & 0b11111) as u32;
+                    let value = (self.read_reg_gpr(instr.rt())) as u32 >> shift;
+                    let sign_extended_value = (value as i32) as u64;
+                    self.write_reg_gpr(instr.rd() as usize, sign_extended_value);
+                },
                 JR => {
                     //JR page 438
                     //get the old program counter cause it needs delay slot
@@ -115,6 +129,12 @@ impl Cpu {
                     self.reg_lo = (res as i32) as u64;
                     self.reg_hi = ((res >> 32) as i32) as u64;
                 },
+                ADDU => {
+                    let rs = instr.rs() as u32;
+                    let rt = instr.rt() as u32;
+                    let value = (rs.wrapping_add(rt) as i32) as u64;
+                    self.write_reg_gpr(instr.rd() as usize, value);
+                },
                 SUBU => {
                     //SUBU page 514
                     let rs = instr.rs();
@@ -132,6 +152,13 @@ impl Cpu {
                     //XOR page 542
                     let value = self.read_reg_gpr(instr.rs()) ^
                         self.read_reg_gpr(instr.rt());
+                    self.write_reg_gpr(instr.rd() as usize, value);
+                },
+                SLTU => {
+                    //SLTU page 508, ignored subtraction made no sense
+                    let rs = instr.rs();
+                    let rt = instr.rt();
+                    let value = if rs < rt { 1 } else { 0 };
                     self.write_reg_gpr(instr.rd() as usize, value);
                 },
             },
