@@ -15,15 +15,15 @@ impl N64 {
         }
     }
 
-    pub fn step(&mut self) {
-        self.cpu.step(&mut self.interconnect);
-    }
-
     pub fn cpu(&self) -> &Cpu {
         &self.cpu
     }
 
     pub fn interconnect(&self) -> &Interconnect {
         &self.interconnect
+    }
+
+    pub fn step(&mut self) {
+        self.cpu.step(&mut self.interconnect);
     }
 }

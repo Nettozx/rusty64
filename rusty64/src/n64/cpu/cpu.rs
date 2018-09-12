@@ -71,9 +71,9 @@ impl Cpu {
     pub fn step(&mut self, interconnect: &mut Interconnect) {
         if let Some(pc) = self.delay_slot_pc {
             let instr = self.read_instruction(interconnect,pc);
-            self.execute_instruction(interconnect, instr);
             //clear delay slot after using
             self.delay_slot_pc = None;
+            self.execute_instruction(interconnect, instr);
         } else {
             let instr = self.read_instruction(interconnect,self.reg_pc);
             //increment prog counter

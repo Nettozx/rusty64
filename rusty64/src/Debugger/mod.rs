@@ -1,7 +1,7 @@
 mod command;
 
 use n64::*;
-use n64::cpu::opcode::Opcode;
+use n64::cpu::opcode::Opcode::*;
 use n64::cpu::instruction::*;
 use n64::mem_map::*;
 use n64::mem_map::Addr::*;
@@ -25,28 +25,23 @@ impl Debugger {
         loop {
             print!("n64> ");
             stdout().flush().unwrap();
-            let input = read_stdin();
 
-            if let Ok(command) = input.parse() {
-                if self.execute(command) {
-                    break
-                }
-            } else { println!("Invalid input") }
-        }
-    }
+            let command = match (read_stdin().parse(), self.last_command) {
+                (Ok(Command::Repeat), Some(c)) => Ok(c),
+                (Ok(Command::Repeat), None) => Err("No last command"),
+                (Ok(c), _) => Ok(c),
+                (Err(e), _) => Err("Invalid input"),
+            };
 
-    fn execute(&mut self, command: Command) -> bool {
-        match command {
-            Command::Step => self.step(),
-            Command::Exit => return true,
-            Command::Repeat => {
-                if let Some(last_command) = self.last_command {
-                    return self.execute(last_command)
-                }
+            match command {
+                Ok(Command::Step) => self.step(),
+                Ok(Command::Exit) => break,
+                Ok(Command::Repeat) => unreachable!(),
+                Err(ref e) => println!("{}", e),
             }
+
+            self.last_command = command.ok();
         }
-        if let Command::Repeat = command {} else { self.last_command = Some(command) };
-        return false;
     }
 
     pub fn step(&mut self) {
