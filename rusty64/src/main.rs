@@ -5,6 +5,7 @@ extern crate num;
 extern crate enum_primitive;
 
 mod n64;
+mod debugger;
 
 use std::env;
 use std::fs;
@@ -32,8 +33,7 @@ fn main() {
     //-Also note that cartridge ROM is mapped at physical address 0x10000000 (kseg 1 address
     // 0xb0000000).
 
-    //Now lets open a .n64 ROM file in hex mode and go to address 0x40, going to open
-    // Legend of Zelda:Ocarina of Time.
+    //Now lets open a .n64 ROM file in hex mode and go to address 0x40
     //To translate this we need to find out the instruction set so look at the datasheet
     // for this processor
     //http://datasheets.chipdb.org/NEC/Vr-Series/Vr43xx/U10504EJ7V0UMJ1.pdf
@@ -54,11 +54,9 @@ fn main() {
     let pif = read_bin(pif_file_name);
     let rom = read_bin(rom_file_name);
 
-    let mut n64 = n64::N64::new(pif, rom);
-    loop {
-        //println!("N64: {:#?}", &n64);
-        n64.run_instruction();
-    }
+    let n64 = n64::N64::new(pif, rom);
+    let mut debugger = debugger::Debugger::new(n64);
+    debugger.run();
 }
 
 fn read_bin<P: AsRef<Path>>(path: P) -> Box<[u8]> {
