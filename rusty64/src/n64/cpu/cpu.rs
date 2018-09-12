@@ -1,9 +1,8 @@
-use super::super::interconnect::*;
-use super::cp0;
+use super::{cp0, Instruction};
 use super::opcode::Opcode::*;
-use super::opcode::SpecialOpcode::*;
 use super::opcode::RegImmOpcode::*;
-use super::instruction::Instruction;
+use super::opcode::SpecialOpcode::*;
+use super::super::Interconnect;
 
 use std::fmt;
 
@@ -11,12 +10,12 @@ const NUM_GPR: usize = 32; //number of general purpose registers
 
 enum SignExtendResult {
     Yes,
-    No
+    No,
 }
 
 enum WriteLink {
     Yes,
-    No
+    No,
 }
 
 pub struct Cpu {
@@ -36,7 +35,7 @@ pub struct Cpu {
 
     cp0: cp0::Cp0,
 
-    delay_slot_pc: Option<u64>
+    delay_slot_pc: Option<u64>,
 }
 
 impl Cpu {
@@ -97,21 +96,21 @@ impl Cpu {
                     self.reg_instr(instr, |_, rt, sa| {
                         rt << sa
                     })
-                }
+                },
                 SRL => {
                     //Shift Right Logical - page 511
                     self.reg_instr(instr, |_, rt, sa| {
                         let rt = rt as u32;
                         (rt >> sa) as u64
                     })
-                }
+                },
                 SLLV => {
                     //Shift Left Logical Variable - page 504
                     self.reg_instr(instr,|rs,rt, _| {
                         let shift = rs & 0b11111;
                         rt << shift
                     })
-                }
+                },
                 SRLV => {
                     //Shift Right Logical Variable - page 512
                     self.reg_instr(instr, |rs,rt, _| {
@@ -120,7 +119,7 @@ impl Cpu {
                         let shift = rs & 0b11111;
                         (rt >> shift) as u64
                     })
-                }
+                },
                 JR => {
                     //Jump Register - page 438
                     //get the old program counter cause it needs delay slot
@@ -128,17 +127,17 @@ impl Cpu {
                     //Update PC before executing delay slot instruction
                     self.reg_pc = self.read_reg_gpr(instr.rs());
                     self.delay_slot_pc = Some(delay_slot_pc);
-                }
+                },
                 MFHI => {
                     //Move From HI - page 472
                     let value = self.reg_hi;
                     self.write_reg_gpr(instr.rd() as usize, value);
-                }
+                },
                 MFLO => {
                     //Move From LO - page 473
                     let value = self.reg_lo;
                     self.write_reg_gpr(instr.rd() as usize, value);
-                }
+                },
                 MULTU => {
                     //Multiply Unsigned - page 481
                     //TODO undefined if last 2 instr were MFHI or MFLO
@@ -149,32 +148,32 @@ impl Cpu {
                     let res = (rs as u64) * (rt as u64);
                     self.reg_lo = (res as i32) as u64;
                     self.reg_hi = ((res >> 32) as i32) as u64;
-                }
+                },
                 ADDU => {
                     //Add Unsigned page - 374
                     self.reg_instr(instr, |rs,rt, _| { rs.wrapping_add(rt) })
-                }
+                },
                 SUBU => {
                     //Subtract Unsigned - page 514
                     self.reg_instr(instr, |rs, rt, _| { rs.wrapping_sub(rt) })
-                }
+                },
                 AND => {
                     //And - page 375
                     self.reg_instr(instr, |rs, rt, _| { rs & rt })
-                }
+                },
                 OR => {
                     //Or - page 484
                     self.reg_instr(instr, |rs, rt, _| { rs | rt })
-                }
+                },
                 XOR => {
                     //Exclusive Or - page 542
                     self.reg_instr(instr, |rs, rt, _| { rs ^ rt })
-                }
+                },
                 SLTU => {
                     //Set On Less Than Unsigned - page 508, ignored subtraction made no sense
                     self.reg_instr(instr, |rs, rt, _|
                         { if rs < rt { 1 } else { 0 } })
-                }
+                },
             },
             REGIMM => match instr.reg_imm_op() {
                 BGEZAL => {
@@ -189,52 +188,52 @@ impl Cpu {
                     rs.wrapping_add(imm_sign_extended)
                     //TODO just doing wrapping add to ignore error
                 })
-            }
+            },
             ADDIU => {
                 //Add Immediate Unsigned - page 373
                 self.imm_instr(instr, SignExtendResult::Yes,
                                |rs, _, imm_sign_extended| {
                     rs.wrapping_add(imm_sign_extended)
                 })
-            }
+            },
             ANDI => {
                 //And Immediate - page 376
                 self.imm_instr(instr, SignExtendResult::No,
                                |rs, imm, _| { rs & imm })
-            }
+            },
             ORI => {
                 //Or Immediate - page 485
                 self.imm_instr(instr, SignExtendResult::No,
                                |rs, imm, _| { rs | imm })
-            }
+            },
             LUI => {
                 //Load Upper Immediate - page 456
                 self.imm_instr(instr, SignExtendResult::Yes,
                                |_, imm, _| { imm << 16 })
-            }
+            },
             MTC0 => {
                 //Move To System Control Coprocessor - page 474
                 let data = self.read_reg_gpr(instr.rt());
                 self.cp0.write_reg(instr.rd(), data);
-            }
+            },
             BEQ => {
                 //Branch On Equal - page 385
                 self.branch(instr, WriteLink::No, |rs, rt| rs == rt);
-            }
+            },
             BNE => {
                 //Branch On Not Equal - page 399
                 self.branch(instr, WriteLink::No, |rs, rt| rs != rt);
-            }
+            },
             BEQL => {
                 //Branch On Equal Likely - page 386
                 //BEQZL is the same but with zero filled in already
                 self.branch_likely(instr, |rs, rt| rs == rt);
-            }
+            },
             BNEL => {
                 //Branch On Not Equal Likely - page 400
                 //BNEZL is the same but with zero filled in already
                 self.branch_likely(instr, |rs, rt| rs != rt);
-            }
+            },
             LW => {
                 //Load Word - page 458
                 let base = instr.rs();
@@ -244,7 +243,7 @@ impl Cpu {
                     self.read_reg_gpr(base).wrapping_add(sign_extended_offset);
                 let mem = (self.read_word(interconnect, virt_addr) as i32) as u64;
                 self.write_reg_gpr(instr.rt(), mem);
-            }
+            },
             SW => {
                 //Store Word - page 515
                 let base = instr.rs();
@@ -254,7 +253,7 @@ impl Cpu {
                     self.read_reg_gpr(base).wrapping_add(sign_extended_offset);
                 let mem = self.read_reg_gpr(instr.rt()) as u32;
                 self.write_word(interconnect, virt_addr, mem);
-            }
+            },
         }
     }
 
@@ -267,7 +266,7 @@ impl Cpu {
         let sign_extended_value = (value as i32) as u64;
         let value = match sign_extend_result {
             SignExtendResult::Yes => sign_extended_value,
-            _ => value
+            _ => value,
         };
         self.write_reg_gpr(instr.rt(), value);
     }
@@ -348,7 +347,7 @@ impl Cpu {
     fn read_reg_gpr(&self, index: usize) -> u64 {
         match index {
             0 => 0,
-            _ => self.reg_gpr[index]
+            _ => self.reg_gpr[index],
         }
     }
 }
@@ -402,7 +401,7 @@ impl fmt::Debug for Cpu {
                  self.reg_lo,
                  self.reg_llbit,
                  self.reg_fcr0,
-                 self.reg_fcr31
+                 self.reg_fcr31,
         )?;
 
         writeln!(f, "{:#?}", self.cp0)

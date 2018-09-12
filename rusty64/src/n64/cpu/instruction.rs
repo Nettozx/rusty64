@@ -1,5 +1,5 @@
-use super::opcode::*;
 use std::fmt;
+use super::opcode::{Opcode, RegImmOpcode, SpecialOpcode};
 use num::FromPrimitive;
 
 #[derive(Clone, Copy)]

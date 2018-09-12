@@ -16,7 +16,7 @@ impl From<u32> for DataTransferPattern {
         match (value >> 24) & 0b1111 {
             0 => DataTransferPattern::Normal,
             6 => DataTransferPattern::DxxDxx,
-            _ => panic!("Invalid data transfoer pattern (EP): {:#x}", value)
+            _ => panic!("Invalid data transfoer pattern (EP): {:#x}", value),
         }
     }
 }
@@ -24,7 +24,7 @@ impl From<u32> for DataTransferPattern {
 #[derive(Debug)]
 enum Endianness { //section 5.4.6
     Little,
-    Big
+    Big,
 }
 
 impl Default for Endianness {
@@ -38,7 +38,7 @@ impl From<u32> for Endianness {
         match (value >> 15) & 0b1 {
             0 => Endianness::Little,
             1 => Endianness::Big,
-            _ => unreachable!()
+            _ => unreachable!(),
         }
     }
 }

@@ -26,7 +26,7 @@ pub struct RegStatus {
     //EXL
     exception_level: bool,
     //IE
-    interrupts_enabled: bool
+    interrupts_enabled: bool,
 }
 
 impl From<u32> for RegStatus {
@@ -83,7 +83,7 @@ impl From<u32> for DiagnosticStatus {
             tlb_general_exception_vector_location: value.into(),
             tlb_shutdown:              (value & (1 << 21)) != 0,
             soft_reset_or_nmi_occured: (value & (1 << 20)) != 0,
-            condition_bit:             (value & (1 << 18)) != 0
+            condition_bit:             (value & (1 << 18)) != 0,
         }
     }
 }
@@ -91,7 +91,7 @@ impl From<u32> for DiagnosticStatus {
 #[derive(Debug)]
 enum TLBGeneralExceptionVectorLocation {
     Normal,
-    Bootstrap
+    Bootstrap,
 }
 
 impl Default for TLBGeneralExceptionVectorLocation {
@@ -105,7 +105,7 @@ impl From<u32> for TLBGeneralExceptionVectorLocation {
         match (value >> 22) & 0b1 {
             0 => TLBGeneralExceptionVectorLocation::Normal,
             1 => TLBGeneralExceptionVectorLocation::Bootstrap,
-            _ => unreachable!()
+            _ => unreachable!(),
         }
     }
 }
@@ -118,7 +118,7 @@ struct InterruptMask {
     //IM(6:2)
     external_interrupt_write_req: [bool; 5],
     //IM(1:0)
-    software_interrupt_cause_reg: [bool; 2]
+    software_interrupt_cause_reg: [bool; 2],
 }
 
 impl From<u32> for InterruptMask {
@@ -133,7 +133,7 @@ impl From<u32> for InterruptMask {
                 (value & (1 << 14)) != 0],
             software_interrupt_cause_reg: [
                 (value & (1 << 8)) != 0,
-                (value & (1 << 9)) != 0]
+                (value & (1 << 9)) != 0],
         }
     }
 }
@@ -142,7 +142,7 @@ impl From<u32> for InterruptMask {
 enum Mode {
     Kernel,     //00
     Supervisor, //01
-    User        //10
+    User,       //10
 }
 
 impl Default for Mode {
@@ -157,7 +157,7 @@ impl From<u32> for Mode {
             0b00 => Mode::Kernel,
             0b01 => Mode::Supervisor,
             0b10 => Mode::User,
-            _ => panic!("Invalid cp0 KSU bit: {:#b}", value)
+            _ => panic!("Invalid cp0 KSU bit: {:#b}", value),
         }
     }
 }

@@ -1,12 +1,8 @@
 use byteorder::{BigEndian, ByteOrder};
-use super::mem_map::*;
-use super::pif::Pif;
-use super::rsp::Rsp;
+
+use super::{AudioInterface, PeripheralInterface, Pif, Rsp, SerialInterface, VideoInterface};
+use super::mem_map::{self, Addr};
 use super::rdp::Rdp;
-use super::audio_interface::AudioInterface;
-use super::video_interface::VideoInterface;
-use super::peripheral_interface::PeripheralInterface;
-use super::serial_interface::SerialInterface;
 
 use std::fmt;
 
@@ -22,7 +18,7 @@ pub struct Interconnect {
     pi: PeripheralInterface,
     si: SerialInterface,
     cart_rom: Box<[u8]>,
-    rdram: Box<[u16]>
+    rdram: Box<[u16]>,
 }
 
 impl Interconnect {
@@ -46,7 +42,7 @@ impl Interconnect {
 
     pub fn read_word(&self, addr: u32) -> u32 {
         //look at n64 memory map txt for PIF_ROM start and end
-        match map_addr(addr) {
+        match mem_map::map_addr(addr) {
             Addr::PifRom(offset)  => self.pif.read_boot_rom(offset),
             Addr::PifRam(offset)  => self.pif.read_ram(offset),
 
@@ -78,7 +74,7 @@ impl Interconnect {
     }
 
     pub fn write_word(&mut self, addr: u32, value: u32) {
-        match map_addr(addr) {
+        match mem_map::map_addr(addr) {
             Addr::PifRom(_)       => panic!("Cannot write to PIF ROM"),
             Addr::PifRam(offset)  => self.pif.write_ram(offset, value),
 

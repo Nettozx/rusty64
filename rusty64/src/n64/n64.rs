@@ -1,10 +1,9 @@
-use super::cpu::*;
-use super::interconnect::*;
+use super::{Cpu, Interconnect};
 
 #[derive(Debug)]
 pub struct N64 {
     cpu: Cpu,
-    interconnect: Interconnect
+    interconnect: Interconnect,
 }
 
 impl N64 {

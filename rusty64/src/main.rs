@@ -7,13 +7,12 @@ extern crate enum_primitive;
 mod n64;
 mod debugger;
 
-use n64::*;
-use debugger::*;
-
 use std::env;
-use std::fs;
+use std::fs::File;
 use std::io::Read;
 use std::path::Path;
+use debugger::Debugger;
+use n64::N64;
 
 fn main() {
     //N64 Specs
@@ -64,7 +63,7 @@ fn main() {
 
 fn read_bin<P: AsRef<Path>>(path: P) -> Box<[u8]> {
     //open the rom file
-    let mut file = fs::File::open(path).unwrap();
+    let mut file = File::open(path).unwrap();
     //read the rom
     let mut file_buf = Vec::new();
     file.read_to_end(&mut file_buf).unwrap();

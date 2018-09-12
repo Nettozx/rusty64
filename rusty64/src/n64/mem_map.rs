@@ -105,6 +105,6 @@ pub fn map_addr(addr: u32) -> Addr {
 
         SI_STATUS_REG => Addr::SiStatusReg,
 
-        _ => panic!("Unrecognized physical address: {:#x}", addr)
+        _ => panic!("Unrecognized physical address: {:#x}", addr),
     }
 }
