@@ -24,19 +24,28 @@ impl Debugger {
             let command = input.parse();
             match command {
                 Ok(Command::Step) => self.step(),
-                _ => println!("Invalid input")
+                Ok(Command::Exit) => break,
+                Err(_) => println!("Invalid input")
             }
             //self.n64.run_instruction();
         }
     }
 
     pub fn step(&mut self) {
-        self.n64.run_instruction()
+        //Print next PC/instr
+        println!("{:018X}", self.n64.cpu().reg_pc());
+//        match instr.opcode() {
+//            SPECIAL => print!("{:?}(SpecialOp)", instr.special_op()),
+//            REGIMM => print!("{:?}(RegImmOp)", instr.reg_imm_op()),
+//            _ => print!("{:?}", instr)
+//        }
+//        if let DelaySlot::Yes = delay_slot { println!("(DelaySlot)") } else { println!() }
+        self.n64.step()
     }
 }
 
 fn read_stdin() -> String {
     let mut input = String::new();
     stdin().read_line(&mut input).unwrap();
-    return input.trim().into();
+    input.trim().into()
 }

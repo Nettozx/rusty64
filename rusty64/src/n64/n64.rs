@@ -15,7 +15,11 @@ impl N64 {
         }
     }
 
-    pub fn run_instruction(&mut self) {
-        self.cpu.run_instruction();
+    pub fn step(&mut self) {
+        self.cpu.step();
+    }
+
+    pub fn cpu(&self) -> &Cpu {
+        &self.cpu
     }
 }
