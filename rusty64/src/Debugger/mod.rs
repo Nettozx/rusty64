@@ -11,7 +11,7 @@ pub struct Debugger {
 impl Debugger {
     pub fn new(n64: N64) -> Debugger {
         Debugger {
-            n64
+            n64: n64
         }
     }
 
@@ -20,14 +20,18 @@ impl Debugger {
             print!("n64> ");
             stdout().flush().unwrap();
             let input = read_stdin();
-            let command = input.parse();
 
+            let command = input.parse();
             match command {
-                Ok(Command::Step) => self.n64.run_instruction(),
+                Ok(Command::Step) => self.step(),
                 _ => println!("Invalid input")
             }
             //self.n64.run_instruction();
         }
+    }
+
+    pub fn step(&mut self) {
+        self.n64.run_instruction()
     }
 }
 
