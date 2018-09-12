@@ -59,12 +59,6 @@ impl Cpu {
         }
     }
 
-    pub fn run(&mut self) {
-        loop {
-            self.step();
-        }
-    }
-
     pub fn reg_pc(&self) -> u64 {
         self.reg_pc
     }
