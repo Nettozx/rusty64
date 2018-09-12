@@ -22,4 +22,8 @@ impl N64 {
     pub fn cpu(&self) -> &Cpu {
         &self.cpu
     }
+
+    pub fn interconnect(&self) -> &Interconnect {
+        &self.interconnect
+    }
 }
