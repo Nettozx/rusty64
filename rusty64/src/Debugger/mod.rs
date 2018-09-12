@@ -1,6 +1,8 @@
 mod command;
 
 use n64::*;
+use n64::mem_map::*;
+use n64::mem_map::Addr::*;
 use self::command::*;
 use std::io::*;
 
@@ -32,8 +34,13 @@ impl Debugger {
     }
 
     pub fn step(&mut self) {
-        //Print next PC/instr
-        println!("{:018X}", self.n64.cpu().reg_pc());
+        let current_pc = self.n64.cpu().current_pc_phys();
+        let addr = map_addr(current_pc as u32);
+        let instr = match addr {
+            PifRom(offset) => 0, //TODO
+            _ => panic!("Debugger can't inspect address: {:?}", addr)
+        };
+        println!("{:018X}", current_pc);
 //        match instr.opcode() {
 //            SPECIAL => print!("{:?}(SpecialOp)", instr.special_op()),
 //            REGIMM => print!("{:?}(RegImmOp)", instr.reg_imm_op()),
