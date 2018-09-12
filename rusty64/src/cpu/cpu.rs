@@ -87,74 +87,55 @@ impl Cpu {
         match instr.opcode() {
             SPECIAL => match instr.special_op() {
                 SLL => {
-                    //SRL page 503
+                    //Shift Left Logical - page 503
+                    //same as NOP if sa==0
                     self.reg_instr(instr, |_, rt, sa| {
                         rt << sa
                     })
-
-                    //if sa == 0 then shifting by 0 is same as doing nothing, hence NOP
-//                    let value = self.read_reg_gpr(instr.rt()) << instr.sa();
-//                    let sign_extended_value = (value as i32) as u64;
-//                    self.write_reg_gpr(instr.rd() as usize, sign_extended_value);
                 }
                 SRL => {
-                    //SRL page 511
+                    //Shift Right Logical - page 511
                     self.reg_instr(instr, |_, rt, sa| {
                         let rt = rt as u32;
                         (rt >> sa) as u64
                     })
-//                    let value = self.read_reg_gpr(instr.rt()) >> instr.sa();
-//                    let sign_extended_value = (value as i32) as u64;
-//                    self.write_reg_gpr(instr.rd() as usize, sign_extended_value);
                 }
                 SLLV => {
-                    //SLLV page 504
+                    //Shift Left Logical Variable - page 504
                     self.reg_instr(instr,|rs,rt, _| {
                         let shift = rs & 0b11111;
                         rt << shift
                     })
-
-//                    let shift = self.read_reg_gpr(instr.rs()) & 0b11111;
-//                    let value = self.read_reg_gpr(instr.rt()) << shift;
-//                    let sign_extended_value = (value as i32) as u64;
-//                    self.write_reg_gpr(instr.rd() as usize, sign_extended_value);
                 }
                 SRLV => {
-                    //SRLV page 512
+                    //Shift Right Logical Variable - page 512
                     self.reg_instr(instr, |rs,rt, _| {
                         let rs = rs as u32;
                         let rt = rt as u32;
                         let shift = rs & 0b11111;
                         (rt >> shift) as u64
                     })
-
-//                    let shift = (self.read_reg_gpr(instr.rs()) & 0b11111) as u32;
-//                    let value = (self.read_reg_gpr(instr.rt())) as u32 >> shift;
-//                    let sign_extended_value = (value as i32) as u64;
-//                    self.write_reg_gpr(instr.rd() as usize, sign_extended_value);
                 }
                 JR => {
-                    //JR page 438
+                    //Jump Register - page 438
                     //get the old program counter cause it needs delay slot
                     let delay_slot_pc = self.reg_pc;
-
                     //Update PC before executing delay slot instruction
                     self.reg_pc = self.read_reg_gpr(instr.rs());
-
                     self.execute_delay_slot(delay_slot_pc);
                 }
                 MFHI => {
-                    //MFHI page 472
+                    //Move From HI - page 472
                     let value = self.reg_hi;
                     self.write_reg_gpr(instr.rd() as usize, value);
                 }
                 MFLO => {
-                    //MFLO page 473
+                    //Move From LO - page 473
                     let value = self.reg_lo;
                     self.write_reg_gpr(instr.rd() as usize, value);
                 }
                 MULTU => {
-                    //MULTU page 481
+                    //Multiply Unsigned - page 481
                     //TODO undefined if last 2 instr were MFHI or MFLO
                     let rs = self.read_reg_gpr(instr.rs()) as u32;
                     let rt = self.read_reg_gpr(instr.rt()) as u32;
@@ -165,149 +146,92 @@ impl Cpu {
                     self.reg_hi = ((res >> 32) as i32) as u64;
                 }
                 ADDU => {
-                    self.reg_instr(instr, |rs,rt, _| {
-                        rs.wrapping_add(rt)
-                    })
-//                    let rs = self.read_reg_gpr(instr.rs());
-//                    let rt = self.read_reg_gpr(instr.rt());
-//                    let value = (rs.wrapping_add(rt) as i32) as u64;
-//                    self.write_reg_gpr(instr.rd() as usize, value);
+                    //Add Unsigned page - 374
+                    self.reg_instr(instr, |rs,rt, _| { rs.wrapping_add(rt) })
                 }
                 SUBU => {
-                    //SUBU page 514
-                    self.reg_instr(instr, |rs, rt, _| {
-                        rs.wrapping_sub(rt)
-                    })
-//                    let rs = self.read_reg_gpr(instr.rs());
-//                    let rt = self.read_reg_gpr(instr.rt());
-//                    let value = (rs.wrapping_sub(rt) as i32) as u64;
-//                    self.write_reg_gpr(instr.rd() as usize, value);
+                    //Subtract Unsigned - page 514
+                    self.reg_instr(instr, |rs, rt, _| { rs.wrapping_sub(rt) })
                 }
                 AND => {
-                    //AND page 375
-                    self.reg_instr(instr, |rs, rt, _| {
-                        rs & rt
-                    })
-//                    let value = self.read_reg_gpr(instr.rs()) &
-//                        self.read_reg_gpr(instr.rt());
-//                    self.write_reg_gpr(instr.rd() as usize, value);
+                    //And - page 375
+                    self.reg_instr(instr, |rs, rt, _| { rs & rt })
                 }
                 OR => {
-                    //OR page 484
-                    self.reg_instr(instr, |rs, rt, _| {
-                        rs | rt
-                    })
-//                    let value = self.read_reg_gpr(instr.rs()) |
-//                        self.read_reg_gpr(instr.rt());
-//                    self.write_reg_gpr(instr.rd() as usize, value);
+                    //Or - page 484
+                    self.reg_instr(instr, |rs, rt, _| { rs | rt })
                 }
                 XOR => {
-                    //XOR page 542
-                    self.reg_instr(instr, |rs, rt, _| {
-                        rs ^ rt
-                    })
-//                    let value = self.read_reg_gpr(instr.rs()) ^
-//                        self.read_reg_gpr(instr.rt());
-//                    self.write_reg_gpr(instr.rd() as usize, value);
+                    //Exclusive Or - page 542
+                    self.reg_instr(instr, |rs, rt, _| { rs ^ rt })
                 }
                 SLTU => {
-                    //SLTU page 508, ignored subtraction made no sense
-                    self.reg_instr(instr, |rs, rt, _| {
-                        if rs < rt { 1 } else { 0 }
-                    })
-//                    let rs = self.read_reg_gpr(instr.rs());
-//                    let rt = self.read_reg_gpr(instr.rt());
-//                    let value = if rs < rt { 1 } else { 0 };
-//                    self.write_reg_gpr(instr.rd() as usize, value);
+                    //Set On Less Than Unsigned - page 508, ignored subtraction made no sense
+                    self.reg_instr(instr, |rs, rt, _|
+                        { if rs < rt { 1 } else { 0 } })
                 }
             },
             REGIMM => match instr.reg_imm_op() {
                 BGEZAL => {
-                    //BGEZAL page 388
+                    //Branch On Greater Than Or Equal To Zero And Link - page 388
                     self.branch(instr, WriteLink::Yes, |rs, _| (rs as i64) >= 0);
                 }
             },
             ADDI => {
-                //ADDI page 372
-                self.imm_instr(instr, SignExtendResult::Yes, |rs, _, imm_sign_extended| {
-                    rs.wrapping_add(imm_sign_extended) //TODO just doing wrapping add to ignore error
+                //Add Immediate - page 372
+                self.imm_instr(instr, SignExtendResult::Yes,
+                               |rs, _, imm_sign_extended| {
+                    rs.wrapping_add(imm_sign_extended)
+                    //TODO just doing wrapping add to ignore error
                 })
-                //handle overflow
-//                let rs_positive = (self.read_reg_gpr(instr.rs()) >> 31) & 1 == 0;
-//                let imm_positive = (instr.imm_sign_extended() >> 31) & 1 == 0;
-//                let res = self.read_reg_gpr(instr.rs()).wrapping_add(instr.imm_sign_extended());
-//                let res_positive = (res >> 31 & 1) == 0;
-//                match (rs_positive, imm_positive, res_positive) {
-//                    (true, true, false) => {
-//                        panic!("Integer overflow exception not implemented! (p+p=n) {:016X} + \
-//                        {:016X} != {:016X}", instr.rs(), instr.imm_sign_extended(), res)
-//                    }
-//                    (false, false, true) => {
-//                        panic!("Integer overflow exception not implemented! (n+n=p) {:016X} + \
-//                        {:016X} != {:016X}", instr.rs(), instr.imm_sign_extended(), res)
-//                    }
-//                    _ => {}
-//                }
-//
-//                //let res = self.read_reg_gpr(instr.rs()) + instr.imm_sign_extended();
-//                self.write_reg_gpr(instr.rt(), res)
             }
             ADDIU => {
-                //ADDIU page 373
-                self.imm_instr(instr, SignExtendResult::Yes, |rs, _, imm_sign_extended| {
+                //Add Immediate Unsigned - page 373
+                self.imm_instr(instr, SignExtendResult::Yes,
+                               |rs, _, imm_sign_extended| {
                     rs.wrapping_add(imm_sign_extended)
                 })
-//                //the same as ADDI but it cannot overflow
-//                let res = self.read_reg_gpr(instr.rs())
-//                    .wrapping_add(instr.imm_sign_extended());
-//                self.write_reg_gpr(instr.rt(), res)
             }
             ANDI => {
-                //ANDI page 376
-                self.imm_instr(instr, SignExtendResult::No, |rs, imm, _| {
-                    rs & imm
-                })
-//                let res = self.read_reg_gpr(instr.rs()) & (instr.imm() as u64);
-//                self.write_reg_gpr(instr.rt(), res);
+                //And Immediate - page 376
+                self.imm_instr(instr, SignExtendResult::No,
+                               |rs, imm, _| { rs & imm })
             }
             ORI => {
-                //ORI page 485
-                self.imm_instr(instr, SignExtendResult::No, |rs, imm, _| {
-                    rs | imm
-                })
-//                let res = self.read_reg_gpr(instr.rs()) | (instr.imm() as u64);
-//                self.write_reg_gpr(instr.rt(), res);
+                //Or Immediate - page 485
+                self.imm_instr(instr, SignExtendResult::No,
+                               |rs, imm, _| { rs | imm })
             }
             LUI => {
-                //LUI page 456
-                self.imm_instr(instr, SignExtendResult::Yes, |_, imm, _| {
-                    imm << 16
-                })
-//                //sign extend for upper 32 bits
-//                let value = ((instr.imm() << 16) as i32) as u64;
-//                self.write_reg_gpr(instr.rt(), value);
+                //Load Upper Immediate - page 456
+                self.imm_instr(instr, SignExtendResult::Yes,
+                               |_, imm, _| { imm << 16 })
             }
             MTC0 => {
-                //MTC0 page 474
+                //Move To System Control Coprocessor - page 474
                 let data = self.read_reg_gpr(instr.rt());
                 self.cp0.write_reg(instr.rd(), data);
             }
             BEQ => {
+                //Branch On Equal - page 385
                 self.branch(instr, WriteLink::No, |rs, rt| rs == rt);
             }
             BNE => {
+                //Branch On Not Equal - page 399
                 self.branch(instr, WriteLink::No, |rs, rt| rs != rt);
             }
             BEQL => {
-                //BEQL, BEQZL is the same but with zero filled in already - page 386
+                //Branch On Equal Likely - page 386
+                //BEQZL is the same but with zero filled in already
                 self.branch_likely(instr, |rs, rt| rs == rt);
             }
             BNEL => {
-                //BNEL, BNEZL is the same but with zero filled in already - page 400
+                //Branch On Not Equal Likely - page 400
+                //BNEZL is the same but with zero filled in already
                 self.branch_likely(instr, |rs, rt| rs != rt);
             }
             LW => {
-                //LW page 458
+                //Load Word - page 458
                 let base = instr.rs();
                 //sign extend for upper 32 bits
                 let sign_extended_offset = instr.imm_sign_extended();
@@ -317,7 +241,7 @@ impl Cpu {
                 self.write_reg_gpr(instr.rt(), mem);
             }
             SW => {
-                //SW page 515
+                //Store Word - page 515
                 let base = instr.rs();
                 //sign extend for upper 32 bits
                 let sign_extended_offset = instr.imm_sign_extended();
