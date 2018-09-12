@@ -73,20 +73,28 @@ impl Cpu {
             SPECIAL => match instr.special_op() {
                 SLL => {
                     //SRL page 503
+                    self.reg_instr(instr, |_, rt, sa| {
+                        rt << sa
+                    })
+
                     //if sa == 0 then shifting by 0 is same as doing nothing, hence NOP
-                    let value = self.read_reg_gpr(instr.rt()) << instr.sa();
-                    let sign_extended_value = (value as i32) as u64;
-                    self.write_reg_gpr(instr.rd() as usize, sign_extended_value);
+//                    let value = self.read_reg_gpr(instr.rt()) << instr.sa();
+//                    let sign_extended_value = (value as i32) as u64;
+//                    self.write_reg_gpr(instr.rd() as usize, sign_extended_value);
                 }
                 SRL => {
                     //SRL page 511
-                    let value = self.read_reg_gpr(instr.rt()) >> instr.sa();
-                    let sign_extended_value = (value as i32) as u64;
-                    self.write_reg_gpr(instr.rd() as usize, sign_extended_value);
+                    self.reg_instr(instr, |_, rt, sa| {
+                        let rt = rt as u32;
+                        (rt >> sa) as u64
+                    })
+//                    let value = self.read_reg_gpr(instr.rt()) >> instr.sa();
+//                    let sign_extended_value = (value as i32) as u64;
+//                    self.write_reg_gpr(instr.rd() as usize, sign_extended_value);
                 }
                 SLLV => {
                     //SLLV page 504
-                    self.reg_instr(instr,|rs,rt| {
+                    self.reg_instr(instr,|rs,rt, _| {
                         let shift = rs & 0b11111;
                         rt << shift
                     })
@@ -98,7 +106,7 @@ impl Cpu {
                 }
                 SRLV => {
                     //SRLV page 512
-                    self.reg_instr(instr, |rs,rt| {
+                    self.reg_instr(instr, |rs,rt, _| {
                         let rs = rs as u32;
                         let rt = rt as u32;
                         let shift = rs & 0b11111;
@@ -142,7 +150,7 @@ impl Cpu {
                     self.reg_hi = ((res >> 32) as i32) as u64;
                 }
                 ADDU => {
-                    self.reg_instr(instr, |rs,rt| {
+                    self.reg_instr(instr, |rs,rt, _| {
                         rs.wrapping_add(rt)
                     })
 //                    let rs = self.read_reg_gpr(instr.rs());
@@ -152,7 +160,7 @@ impl Cpu {
                 }
                 SUBU => {
                     //SUBU page 514
-                    self.reg_instr(instr, |rs, rt| {
+                    self.reg_instr(instr, |rs, rt, _| {
                         rs.wrapping_sub(rt)
                     })
 //                    let rs = self.read_reg_gpr(instr.rs());
@@ -162,7 +170,7 @@ impl Cpu {
                 }
                 AND => {
                     //AND page 375
-                    self.reg_instr(instr, |rs, rt| {
+                    self.reg_instr(instr, |rs, rt, _| {
                         rs & rt
                     })
 //                    let value = self.read_reg_gpr(instr.rs()) &
@@ -171,7 +179,7 @@ impl Cpu {
                 }
                 OR => {
                     //OR page 484
-                    self.reg_instr(instr, |rs, rt| {
+                    self.reg_instr(instr, |rs, rt, _| {
                         rs | rt
                     })
 //                    let value = self.read_reg_gpr(instr.rs()) |
@@ -180,7 +188,7 @@ impl Cpu {
                 }
                 XOR => {
                     //XOR page 542
-                    self.reg_instr(instr, |rs, rt| {
+                    self.reg_instr(instr, |rs, rt, _| {
                         rs ^ rt
                     })
 //                    let value = self.read_reg_gpr(instr.rs()) ^
@@ -189,7 +197,7 @@ impl Cpu {
                 }
                 SLTU => {
                     //SLTU page 508, ignored subtraction made no sense
-                    self.reg_instr(instr, |rs, rt| {
+                    self.reg_instr(instr, |rs, rt, _| {
                         if rs < rt { 1 } else { 0 }
                     })
 //                    let rs = self.read_reg_gpr(instr.rs());
@@ -206,48 +214,63 @@ impl Cpu {
             },
             ADDI => {
                 //ADDI page 372
+                self.imm_instr(instr, true,|rs, _, imm_sign_extended| {
+                    rs.wrapping_add(imm_sign_extended) //TODO just doing wrapping add to ignore error
+                })
                 //handle overflow
-                let rs_positive = (self.read_reg_gpr(instr.rs()) >> 31) & 1 == 0;
-                let imm_positive = (instr.imm_sign_extended() >> 31) & 1 == 0;
-                let res = self.read_reg_gpr(instr.rs()).wrapping_add(instr.imm_sign_extended());
-                let res_positive = (res >> 31 & 1) == 0;
-                match (rs_positive, imm_positive, res_positive) {
-                    (true, true, false) => {
-                        panic!("Integer overflow exception not implemented! (p+p=n) {:016X} + \
-                        {:016X} != {:016X}", instr.rs(), instr.imm_sign_extended(), res)
-                    }
-                    (false, false, true) => {
-                        panic!("Integer overflow exception not implemented! (n+n=p) {:016X} + \
-                        {:016X} != {:016X}", instr.rs(), instr.imm_sign_extended(), res)
-                    }
-                    _ => {}
-                }
-
-                //let res = self.read_reg_gpr(instr.rs()) + instr.imm_sign_extended();
-                self.write_reg_gpr(instr.rt(), res)
+//                let rs_positive = (self.read_reg_gpr(instr.rs()) >> 31) & 1 == 0;
+//                let imm_positive = (instr.imm_sign_extended() >> 31) & 1 == 0;
+//                let res = self.read_reg_gpr(instr.rs()).wrapping_add(instr.imm_sign_extended());
+//                let res_positive = (res >> 31 & 1) == 0;
+//                match (rs_positive, imm_positive, res_positive) {
+//                    (true, true, false) => {
+//                        panic!("Integer overflow exception not implemented! (p+p=n) {:016X} + \
+//                        {:016X} != {:016X}", instr.rs(), instr.imm_sign_extended(), res)
+//                    }
+//                    (false, false, true) => {
+//                        panic!("Integer overflow exception not implemented! (n+n=p) {:016X} + \
+//                        {:016X} != {:016X}", instr.rs(), instr.imm_sign_extended(), res)
+//                    }
+//                    _ => {}
+//                }
+//
+//                //let res = self.read_reg_gpr(instr.rs()) + instr.imm_sign_extended();
+//                self.write_reg_gpr(instr.rt(), res)
             }
             ADDIU => {
                 //ADDIU page 373
-                //the same as ADDI but it cannot overflow
-                let res = self.read_reg_gpr(instr.rs())
-                    .wrapping_add(instr.imm_sign_extended());
-                self.write_reg_gpr(instr.rt(), res)
+                self.imm_instr(instr, true,|rs, _, imm_sign_extended| {
+                    rs.wrapping_add(imm_sign_extended)
+                })
+//                //the same as ADDI but it cannot overflow
+//                let res = self.read_reg_gpr(instr.rs())
+//                    .wrapping_add(instr.imm_sign_extended());
+//                self.write_reg_gpr(instr.rt(), res)
             }
             ANDI => {
                 //ANDI page 376
-                let res = self.read_reg_gpr(instr.rs()) & (instr.imm() as u64);
-                self.write_reg_gpr(instr.rt(), res);
+                self.imm_instr(instr, false,|rs, imm, _| {
+                    rs & imm
+                })
+//                let res = self.read_reg_gpr(instr.rs()) & (instr.imm() as u64);
+//                self.write_reg_gpr(instr.rt(), res);
             }
             ORI => {
                 //ORI page 485
-                let res = self.read_reg_gpr(instr.rs()) | (instr.imm() as u64);
-                self.write_reg_gpr(instr.rt(), res);
+                self.imm_instr(instr, false, |rs, imm, _| {
+                    rs | imm
+                })
+//                let res = self.read_reg_gpr(instr.rs()) | (instr.imm() as u64);
+//                self.write_reg_gpr(instr.rt(), res);
             }
             LUI => {
                 //LUI page 456
-                //sign extend for upper 32 bits
-                let value = ((instr.imm() << 16) as i32) as u64;
-                self.write_reg_gpr(instr.rt(), value);
+                self.imm_instr(instr, true, |_, imm, _| {
+                    imm << 16
+                })
+//                //sign extend for upper 32 bits
+//                let value = ((instr.imm() << 16) as i32) as u64;
+//                self.write_reg_gpr(instr.rt(), value);
             }
             MTC0 => {
                 //MTC0 page 474
@@ -298,12 +321,22 @@ impl Cpu {
         self.execute_instruction(delay_slot_instr);
     }
 
+    fn imm_instr<F>(&mut self, instr: Instruction, sign_extend_result: bool, f: F)
+        where F: FnOnce(u64, u64, u64) -> u64 {
+        let rs = self.read_reg_gpr(instr.rs());
+        let imm = instr.imm() as u64;
+        let imm_sign_extended = instr.imm_sign_extended();
+        let value = f(rs, imm, imm_sign_extended);
+        let sign_extended_value = (value as i32) as u64;
+        self.write_reg_gpr(instr.rt(), sign_extended_value);
+    }
 
-    fn reg_instr<F>(&mut self, instr: Instruction, f: F) where F: FnOnce(u64, u64) -> u64 {
+    fn reg_instr<F>(&mut self, instr: Instruction, f: F) where F: FnOnce(u64, u64, u32) -> u64 {
         //formatting based on section 1.4.3 in datasheet
         let rs = self.read_reg_gpr(instr.rs());
         let rt = self.read_reg_gpr(instr.rt());
-        let value = f(rs, rt);
+        let sa = instr.sa();
+        let value = f(rs, rt, sa);
         let sign_extended_value = (value as i32) as u64;
         self.write_reg_gpr(instr.rd() as usize, sign_extended_value);
     }
