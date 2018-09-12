@@ -9,6 +9,21 @@ use std::fmt;
 
 const NUM_GPR: usize = 32; //number of general purpose registers
 
+enum SignExtendResult {
+    Yes,
+    No
+}
+
+enum WriteLink {
+    Yes,
+    No
+}
+
+enum DelaySlot {
+    Yes,
+    No
+}
+
 pub struct Cpu {
     //section 1.4.2 CPU Registers on datasheet
     reg_gpr: [u64; NUM_GPR],
@@ -55,7 +70,7 @@ impl Cpu {
     pub fn run_instruction(&mut self) {
         let instr = self.read_instruction(self.reg_pc);
 
-        self.print_instr(instr, self.reg_pc, false);
+        self.print_instr(instr, self.reg_pc, DelaySlot::No);
 
         //increment prog counter
         self.reg_pc += 4;
@@ -209,12 +224,12 @@ impl Cpu {
             REGIMM => match instr.reg_imm_op() {
                 BGEZAL => {
                     //BGEZAL page 388
-                    self.branch(instr, true, |rs, _| (rs as i64) >= 0);
+                    self.branch(instr, WriteLink::Yes, |rs, _| (rs as i64) >= 0);
                 }
             },
             ADDI => {
                 //ADDI page 372
-                self.imm_instr(instr, true,|rs, _, imm_sign_extended| {
+                self.imm_instr(instr, SignExtendResult::Yes, |rs, _, imm_sign_extended| {
                     rs.wrapping_add(imm_sign_extended) //TODO just doing wrapping add to ignore error
                 })
                 //handle overflow
@@ -239,7 +254,7 @@ impl Cpu {
             }
             ADDIU => {
                 //ADDIU page 373
-                self.imm_instr(instr, true,|rs, _, imm_sign_extended| {
+                self.imm_instr(instr, SignExtendResult::Yes, |rs, _, imm_sign_extended| {
                     rs.wrapping_add(imm_sign_extended)
                 })
 //                //the same as ADDI but it cannot overflow
@@ -249,7 +264,7 @@ impl Cpu {
             }
             ANDI => {
                 //ANDI page 376
-                self.imm_instr(instr, false,|rs, imm, _| {
+                self.imm_instr(instr, SignExtendResult::No, |rs, imm, _| {
                     rs & imm
                 })
 //                let res = self.read_reg_gpr(instr.rs()) & (instr.imm() as u64);
@@ -257,7 +272,7 @@ impl Cpu {
             }
             ORI => {
                 //ORI page 485
-                self.imm_instr(instr, false, |rs, imm, _| {
+                self.imm_instr(instr, SignExtendResult::No, |rs, imm, _| {
                     rs | imm
                 })
 //                let res = self.read_reg_gpr(instr.rs()) | (instr.imm() as u64);
@@ -265,7 +280,7 @@ impl Cpu {
             }
             LUI => {
                 //LUI page 456
-                self.imm_instr(instr, true, |_, imm, _| {
+                self.imm_instr(instr, SignExtendResult::Yes, |_, imm, _| {
                     imm << 16
                 })
 //                //sign extend for upper 32 bits
@@ -278,10 +293,10 @@ impl Cpu {
                 self.cp0.write_reg(instr.rd(), data);
             }
             BEQ => {
-                self.branch(instr, false, |rs, rt| rs == rt);
+                self.branch(instr, WriteLink::No, |rs, rt| rs == rt);
             }
             BNE => {
-                self.branch(instr, false, |rs, rt| rs != rt);
+                self.branch(instr, WriteLink::No, |rs, rt| rs != rt);
             }
             BEQL => {
                 //BEQL, BEQZL is the same but with zero filled in already - page 386
@@ -317,18 +332,22 @@ impl Cpu {
 
     fn execute_delay_slot(&mut self, delay_slot_pc: u64) {
         let delay_slot_instr = self.read_instruction(delay_slot_pc);
-        self.print_instr(delay_slot_instr, delay_slot_pc, true);
+        self.print_instr(delay_slot_instr, delay_slot_pc, DelaySlot::Yes);
         self.execute_instruction(delay_slot_instr);
     }
 
-    fn imm_instr<F>(&mut self, instr: Instruction, sign_extend_result: bool, f: F)
+    fn imm_instr<F>(&mut self, instr: Instruction, sign_extend_result: SignExtendResult, f: F)
         where F: FnOnce(u64, u64, u64) -> u64 {
         let rs = self.read_reg_gpr(instr.rs());
         let imm = instr.imm() as u64;
         let imm_sign_extended = instr.imm_sign_extended();
         let value = f(rs, imm, imm_sign_extended);
         let sign_extended_value = (value as i32) as u64;
-        self.write_reg_gpr(instr.rt(), sign_extended_value);
+        let value = match sign_extend_result {
+            SignExtendResult::Yes => sign_extended_value,
+            _ => value
+        };
+        self.write_reg_gpr(instr.rt(), value);
     }
 
     fn reg_instr<F>(&mut self, instr: Instruction, f: F) where F: FnOnce(u64, u64, u32) -> u64 {
@@ -342,7 +361,7 @@ impl Cpu {
     }
 
     //branch lambda expression
-    fn branch<F>(&mut self, instr: Instruction, write_link: bool, f: F) -> bool
+    fn branch<F>(&mut self, instr: Instruction, write_link: WriteLink, f: F) -> bool
         where F: FnOnce(u64, u64) -> bool {
         let rs = self.read_reg_gpr(instr.rs());
         let rt = self.read_reg_gpr(instr.rt());
@@ -351,7 +370,7 @@ impl Cpu {
         //get the old program counter cause it needs delay slot
         let delay_slot_pc = self.reg_pc;
         //for regimm instructions
-        if write_link {
+        if let WriteLink::Yes = write_link {
             let link_address = delay_slot_pc + 4;
             self.write_reg_gpr(31, link_address);
         }
@@ -369,7 +388,7 @@ impl Cpu {
     //branch likely lambda expression
     fn branch_likely<F>(&mut self, instr: Instruction, f: F)
         where F: FnOnce(u64, u64) -> bool {
-        if !self.branch(instr, false, f) {
+        if !self.branch(instr, WriteLink::No, f) {
             //skip delay slot when branch not taken
             self.reg_pc = self.reg_pc.wrapping_add(4);
         }
@@ -411,14 +430,14 @@ impl Cpu {
         }
     }
 
-    fn print_instr(&self, instr: Instruction, pc: u64, delay: bool) {
+    fn print_instr(&self, instr: Instruction, pc: u64, delay_slot: DelaySlot) {
         print!("reg_pc {:018X}: ", pc);
         match instr.opcode() {
             SPECIAL => print!("{:?}(S)", instr.special_op()),
             REGIMM => print!("{:?}(R)", instr.reg_imm_op()),
             _ => print!("{:?}", instr)
         }
-        if delay { println!("(D)") } else { println!() }
+        if let DelaySlot::Yes = delay_slot { println!("(D)") } else { println!() }
     }
 }
 
