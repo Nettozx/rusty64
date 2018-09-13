@@ -49,8 +49,9 @@ impl Debugger {
 
     pub fn print_guide(&self) {
         println!("---------------------------------------------");
-        println!("|   step, s -> step through program counter |");
-        println!("|   exit, quit, e, q -> end program         |");
+        println!("|  step, s -> step through program counter  |");
+        println!("|  step #  -> step # amount of steps        |");
+        println!("|  exit, quit, e, q -> end program          |");
         println!("---------------------------------------------");
 
     }
