@@ -211,6 +211,7 @@ impl Cpu {
                 self.imm_instr(instr, SignExtendResult::Yes,
                                |_, imm, _| { imm << 16 })
             },
+            //TODO move this into new instruction type
             MTC0 => {
                 //Move To System Control Coprocessor - page 474
                 let data = self.read_reg_gpr(instr.rt());
