@@ -41,7 +41,7 @@
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
-          <entry key="rs" value="41954" />
+          <entry key="rs" value="42563" />
           <entry key="toml" value="60" />
         </counts>
       </usages-collector>
@@ -49,7 +49,7 @@
         <counts>
           <entry key="Android RenderScript" value="82" />
           <entry key="PLAIN_TEXT" value="52" />
-          <entry key="Rust" value="41872" />
+          <entry key="Rust" value="42481" />
           <entry key="TOML file" value="8" />
         </counts>
       </usages-collector>
@@ -98,8 +98,8 @@
           <file pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/src/n64/cpu/opcode.rs">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="-632">
-                  <caret line="34" selection-start-line="34" selection-end-line="34" />
+                <state relative-caret-position="1751">
+                  <caret line="103" column="22" selection-start-line="103" selection-start-column="22" selection-end-line="103" selection-end-column="22" />
                 </state>
               </provider>
             </entry>
@@ -129,8 +129,8 @@
           <file pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/src/n64/cpu/cpu.rs">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="337">
-                  <caret line="199" column="18" selection-start-line="199" selection-start-column="18" selection-end-line="199" selection-end-column="18" />
+                <state relative-caret-position="456">
+                  <caret line="295" column="54" selection-start-line="295" selection-start-column="54" selection-end-line="295" selection-end-column="54" />
                 </state>
               </provider>
             </entry>
@@ -162,6 +162,7 @@
       <find>self.inter</find>
       <find>read_word</find>
       <find>write_word</find>
+      <find>B</find>
     </findStrings>
     <replaceStrings>
       <replace>Bsb</replace>
@@ -277,7 +278,7 @@
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1536900857224" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1536904652735" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/Cargo.toml" />
     <property name="org.rust.cargo.project.model.PROJECT_DISCOVERY" value="true" />
     <property name="run.code.analysis.last.selected.profile" value="pProject Default" />
@@ -320,12 +321,12 @@
       <workItem from="1536437825153" duration="19610000" />
       <workItem from="1536532878765" duration="9041000" />
       <workItem from="1536606685269" duration="53133000" />
-      <workItem from="1536825468802" duration="13692000" />
+      <workItem from="1536825468802" duration="16268000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="170922000" />
+    <option name="totallyTimeSpent" value="173498000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-1208" y="-8" width="1216" height="1896" extended-state="6" />
@@ -519,15 +520,15 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/n64/cpu/opcode.rs">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-632">
-          <caret line="34" selection-start-line="34" selection-end-line="34" />
+        <state relative-caret-position="1751">
+          <caret line="103" column="22" selection-start-line="103" selection-start-column="22" selection-end-line="103" selection-end-column="22" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/n64/cpu/cpu.rs">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="337">
-          <caret line="199" column="18" selection-start-line="199" selection-start-column="18" selection-end-line="199" selection-end-column="18" />
+        <state relative-caret-position="456">
+          <caret line="295" column="54" selection-start-line="295" selection-start-column="54" selection-end-line="295" selection-end-column="54" />
         </state>
       </provider>
     </entry>

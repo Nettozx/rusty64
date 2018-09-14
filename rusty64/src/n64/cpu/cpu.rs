@@ -186,29 +186,38 @@ impl Cpu {
             },
             REGIMM => match instr.reg_imm_op() {
                 BLTZ => {
-                    //page 395
+                    //Branch on Less Than Zero - page 395
+                    self.branch(instr, WriteLink::No, |rs, _,| (rs as i64) < 0);
                 },
                 BGEZ => {
-                    //page 387
+                    //Branch on Greater Than Or Equal To Zero - page 387
+                    self.branch(instr, WriteLink::No, |rs, _| (rs as i64) >= 0);
                 },
                 BLTZAL => {
-                    //page 396
+                    //Branch on Less Than Zero And Link - page 396
+                    self.branch(instr, WriteLink::Yes, |rs, _,| (rs as i64) < 0);
                 },
                 BGEZAL => {
                     //Branch On Greater Than Or Equal To Zero And Link - page 388
                     self.branch(instr, WriteLink::Yes, |rs, _| (rs as i64) >= 0);
                 },
                 BLTZL => {
-                    //page 398
+                    //Branch On Less Than Zero Likely - page 398
+                    self.branch_likely(instr, |rs, _| (rs as i64) < 0);
                 },
                 BGEZL => {
-                    //page 390
+                    //Branch On Greather Than Or Equal To Zero Likely - page 390
+                    self.branch_likely(instr, |rs, _| (rs as i64) >= 0);
                 },
                 BLTZALL => {
-                    //page 397
+                    //Branch On Less Than Zero And Link Likely - page 397
+                    //TODO modify branch_likely to include WriteLink
+                    unimplemented!();
                 },
                 BGEZALL => {
-                    //page 389
+                    //Branch On Greater Than Or Equal To Zero And Link Likely - page 389
+                    //TODO modify branch_likely to include WriteLink
+                    unimplemented!();
                 },
             },
             ADDI => {
@@ -236,6 +245,11 @@ impl Cpu {
                 self.imm_instr(instr, SignExtendResult::No,
                                |rs, imm, _| { rs | imm })
             },
+            XORI => {
+                //Exclusive Or Immediate - page 543
+                self.imm_instr(instr, SignExtendResult::No,
+                               |rs, imm, _| { rs ^ imm })
+            },
             LUI => {
                 //Load Upper Immediate - page 456
                 self.imm_instr(instr, SignExtendResult::Yes,
@@ -255,6 +269,14 @@ impl Cpu {
                 //Branch On Not Equal - page 399
                 self.branch(instr, WriteLink::No, |rs, rt| rs != rt);
             },
+            BLEZ => {
+                //Branch On Less Than Or Equal To Zero - page 393
+                self.branch(instr, WriteLink::No, |rs, _| rs <= 0);
+            },
+            BGTZ => {
+                //Branch On Greater Than Zero - page 391
+                self.branch(instr, WriteLink::No, |rs, _| rs > 0);
+            },
             BEQL => {
                 //Branch On Equal Likely - page 386
                 //BEQZL is the same but with zero filled in already
@@ -264,6 +286,14 @@ impl Cpu {
                 //Branch On Not Equal Likely - page 400
                 //BNEZL is the same but with zero filled in already
                 self.branch_likely(instr, |rs, rt| rs != rt);
+            },
+            BLEZL => {
+                //Branch On Less Than Or Equal To Zero Likely - page 394
+                self.branch_likely(instr, |rs, _| rs <= 0);
+            },
+            BGTZL => {
+                //Branch On Greater Than Zero Likely - page 392
+                self.branch_likely(instr, |rs, _| rs > 0);
             },
             LW => {
                 //Load Word - page 458

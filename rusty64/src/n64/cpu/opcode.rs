@@ -3,7 +3,7 @@ enum_from_primitive! {
     pub enum Opcode {
         SPECIAL  = 0b00_0000, //page 81 - for instructions with special bit code
         REGIMM   = 0b00_0001, //page 79 - for instructions with regimm bit code
-        COP0     = 0b01_0000, //page 83,407 - for instructions with COP0 bit code
+        //COP0     = 0b01_0000, //page 83,407 - for instructions with COP0 bit code
         //Section 3.1 CPU Instruction Formats - page 60
         //I-Type (Immediate)
         //op(31-26), rs(25-21), rt(20-16), immediate(15-0)
@@ -38,9 +38,7 @@ enum_from_primitive! {
         LW       = 0b10_0011, //page 458
         SW       = 0b10_1011, //page 515
 
-        //MTC0     = 0b01_0000, //page 474 TODO this is a sub instruction of COP0
-
-
+        MTC0     = 0b01_0000, //page 474 TODO this is a sub instruction of COP0
     }
 }
 
@@ -101,9 +99,9 @@ pub enum RegImmOpcode {
     }
 }
 
-enum_from_primitive! {
-#[derive(Debug)]
-pub enum Cp0Opcode {
-        MT = 0b00100,   //page 474 this is MTC0 when used with COP0
-    }
-}
+//enum_from_primitive! {
+//#[derive(Debug)]
+//pub enum Cp0Opcode {
+//        MT = 0b00100,   //page 474 this is MTC0 when used with COP0
+//    }
+//}
