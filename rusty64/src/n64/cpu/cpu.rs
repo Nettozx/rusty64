@@ -90,6 +90,39 @@ impl Cpu {
         //section 16.6 of datasheet
         match instr.opcode() {
             SPECIAL => match instr.special_op() {
+                ADD => {
+                    //Add - page 371
+                    self.reg_instr(instr, |rs,rt,_| {rs + rt})
+                },
+                ADDU => {
+                    //Add Unsigned - page 374
+                    self.reg_instr(instr, |rs,rt, _| { rs.wrapping_add(rt) })
+                },
+                SUB => {
+                    //Subtract - page 513
+                    self.reg_instr(instr, |rs, rt, _| {rs - rt})
+                },
+                SUBU => {
+                    //Subtract Unsigned - page 514
+                    self.reg_instr(instr, |rs, rt, _| { rs.wrapping_sub(rt) })
+                },
+                SLTU => {
+                    //Set On Less Than Unsigned - page 508, ignored subtraction made no sense
+                    self.reg_instr(instr, |rs, rt, _|
+                        { if rs < rt { 1 } else { 0 } })
+                },
+                AND => {
+                    //And - page 375
+                    self.reg_instr(instr, |rs, rt, _| { rs & rt })
+                },
+                OR => {
+                    //Or - page 484
+                    self.reg_instr(instr, |rs, rt, _| { rs | rt })
+                },
+                XOR => {
+                    //Exclusive Or - page 542
+                    self.reg_instr(instr, |rs, rt, _| { rs ^ rt })
+                },
                 SLL => {
                     //Shift Left Logical - page 503
                     //same as NOP if sa==0
@@ -120,24 +153,6 @@ impl Cpu {
                         (rt >> shift) as u64
                     })
                 },
-                JR => {
-                    //Jump Register - page 438
-                    //get the old program counter cause it needs delay slot
-                    let delay_slot_pc = self.reg_pc;
-                    //Update PC before executing delay slot instruction
-                    self.reg_pc = self.read_reg_gpr(instr.rs());
-                    self.delay_slot_pc = Some(delay_slot_pc);
-                },
-                MFHI => {
-                    //Move From HI - page 472
-                    let value = self.reg_hi;
-                    self.write_reg_gpr(instr.rd() as usize, value);
-                },
-                MFLO => {
-                    //Move From LO - page 473
-                    let value = self.reg_lo;
-                    self.write_reg_gpr(instr.rd() as usize, value);
-                },
                 MULTU => {
                     //Multiply Unsigned - page 481
                     //TODO undefined if last 2 instr were MFHI or MFLO
@@ -149,37 +164,52 @@ impl Cpu {
                     self.reg_lo = (res as i32) as u64;
                     self.reg_hi = ((res >> 32) as i32) as u64;
                 },
-                ADDU => {
-                    //Add Unsigned page - 374
-                    self.reg_instr(instr, |rs,rt, _| { rs.wrapping_add(rt) })
+                MFHI => {
+                    //Move From HI - page 472
+                    let value = self.reg_hi;
+                    self.write_reg_gpr(instr.rd() as usize, value);
                 },
-                SUBU => {
-                    //Subtract Unsigned - page 514
-                    self.reg_instr(instr, |rs, rt, _| { rs.wrapping_sub(rt) })
+                MFLO => {
+                    //Move From LO - page 473
+                    let value = self.reg_lo;
+                    self.write_reg_gpr(instr.rd() as usize, value);
                 },
-                AND => {
-                    //And - page 375
-                    self.reg_instr(instr, |rs, rt, _| { rs & rt })
+                JR => {
+                    //Jump Register - page 438
+                    //get the old program counter cause it needs delay slot
+                    let delay_slot_pc = self.reg_pc;
+                    //Update PC before executing delay slot instruction
+                    self.reg_pc = self.read_reg_gpr(instr.rs());
+                    self.delay_slot_pc = Some(delay_slot_pc);
                 },
-                OR => {
-                    //Or - page 484
-                    self.reg_instr(instr, |rs, rt, _| { rs | rt })
-                },
-                XOR => {
-                    //Exclusive Or - page 542
-                    self.reg_instr(instr, |rs, rt, _| { rs ^ rt })
-                },
-                SLTU => {
-                    //Set On Less Than Unsigned - page 508, ignored subtraction made no sense
-                    self.reg_instr(instr, |rs, rt, _|
-                        { if rs < rt { 1 } else { 0 } })
-                },
+
             },
             REGIMM => match instr.reg_imm_op() {
+                BLTZ => {
+                    //page 395
+                },
+                BGEZ => {
+                    //page 387
+                },
+                BLTZAL => {
+                    //page 396
+                },
                 BGEZAL => {
                     //Branch On Greater Than Or Equal To Zero And Link - page 388
                     self.branch(instr, WriteLink::Yes, |rs, _| (rs as i64) >= 0);
-                }
+                },
+                BLTZL => {
+                    //page 398
+                },
+                BGEZL => {
+                    //page 390
+                },
+                BLTZALL => {
+                    //page 397
+                },
+                BGEZALL => {
+                    //page 389
+                },
             },
             ADDI => {
                 //Add Immediate - page 372
