@@ -16,7 +16,7 @@ impl From<u32> for DataTransferPattern {
         match (value >> 24) & 0b1111 {
             0 => DataTransferPattern::Normal,
             6 => DataTransferPattern::DxxDxx,
-            _ => panic!("Invalid data transfoer pattern (EP): {:#x}", value),
+            _ => panic!("Invalid data transfer pattern (EP): {:#x}", value),
         }
     }
 }

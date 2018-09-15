@@ -61,6 +61,7 @@ impl Debugger {
             let addr = mem_map::map_addr(current_pc as u32);
             let instr = Instruction(match addr {
                 PifRom(offset) => self.n64.interconnect().pif().read_boot_rom(offset),
+                SpImem(offset) => !panic!("This is what the error was"),
                 _ => panic!("Debugger can't inspect address: {:?}", addr),
             });
 
