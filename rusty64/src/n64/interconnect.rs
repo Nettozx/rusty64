@@ -40,6 +40,8 @@ impl Interconnect {
         &self.pif
     }
 
+    pub fn rsp(&self) -> &Rsp { &self.rsp }
+
     pub fn read_word(&self, addr: u32) -> u32 {
         //look at n64 memory map txt for PIF_ROM start and end
         match mem_map::map_addr(addr) {
