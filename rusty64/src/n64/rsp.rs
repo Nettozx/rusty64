@@ -4,7 +4,17 @@ use super::mem_map::{SP_DMEM_LENGTH, SP_IMEM_LENGTH};
 pub struct Rsp {
     dmem: Box<[u8]>,
     imem: Box<[u8]>,
-
+    //TODO figure out if I need all of these
+    //reg_mem_addr: u32,
+    //reg_dram_addr: u32,
+    //reg_rd_len: u32,
+    //reg_wr_len: u32,
+    //reg_status: u32,
+    //reg_dma_full: u32,
+    //reg_dma_busy: u32,
+    //reg_semaphore: u32,
+    //reg_pc: u32,
+    //reg_ibist: u32,
     halt: bool,
     broke: bool,
     interrupt_enable: bool,

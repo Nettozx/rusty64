@@ -14,6 +14,7 @@ impl Instruction {
         )
     }
 
+    //this is also base
     #[inline(always)]
     pub fn rs(&self) -> usize {
         ((self.0 >> 21) & 0b11111) as usize
@@ -24,6 +25,7 @@ impl Instruction {
         ((self.0 >> 16) & 0b11111) as usize
     }
 
+    //this is also mt_reg
     #[inline(always)]
     pub fn rd(&self) -> u32 {
         (self.0 >> 11) & 0b11111
