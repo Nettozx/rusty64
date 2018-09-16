@@ -2,6 +2,13 @@
 pub struct AudioInterface {
     dram_addr: u32,
     length: u32,
+    //TODO check if I need all of these
+//    reg_dram_addr: u32,
+//    reg_len: u32,
+//    reg_control: u32,
+//    reg_status: u32,
+//    reg_dacrate: u32,
+//    reg_bitrate: u32,
 }
 
 impl AudioInterface {

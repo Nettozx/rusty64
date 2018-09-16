@@ -4,6 +4,21 @@ pub struct VideoInterface {
 
     active_video_start: u32,
     active_video_end: u32,
+//TODO check if I need all of these
+//    reg_status: u32,
+//    reg_origin: u32,
+//    reg_width: u32,
+//    reg_intr: u32,
+//    reg_current: u32,
+//    reg_burst: u32,
+//    reg_v_sync: u32,
+//    reg_h_sync: u32,
+//    reg_leap: u32,
+//    reg_h_start: u32,
+//    reg_v_start: u32,
+//    reg_v_burst: u32,
+//    reg_x_scale: u32,
+//    reg_y_scale: u32,
 }
 
 impl VideoInterface {

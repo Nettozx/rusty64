@@ -1,8 +1,8 @@
 use byteorder::{BigEndian, ByteOrder};
 
-use super::{AudioInterface, PeripheralInterface, Pif, Rsp, SerialInterface, VideoInterface};
+use super::{AudioInterface, MipsInterface, PeripheralInterface, Pif, Rdp, Rsp, SerialInterface, VideoInterface};
 use super::mem_map::{self, Addr};
-use super::rdp::Rdp;
+//use super::rdp::Rdp;
 
 use std::fmt;
 
@@ -14,9 +14,10 @@ pub struct Interconnect {
     rsp: Rsp,
     rdp: Rdp,
     ai: AudioInterface,
-    vi: VideoInterface,
+    mi: MipsInterface,
     pi: PeripheralInterface,
     si: SerialInterface,
+    vi: VideoInterface,
     cart_rom: Box<[u8]>,
     rdram: Box<[u16]>,
 }
@@ -26,11 +27,12 @@ impl Interconnect {
         Interconnect {
             pif: Pif::new(boot_rom),
             rsp: Rsp::new(),
-            rdp: Rdp,
+            rdp: Rdp::default(),
             ai: AudioInterface::default(),
-            vi: VideoInterface::default(),
+            mi: MipsInterface::default(),
             pi: PeripheralInterface::default(),
             si: SerialInterface::default(),
+            vi: VideoInterface::default(),
             cart_rom,
             rdram: vec![0; RDRAM_SIZE].into_boxed_slice(),
         }

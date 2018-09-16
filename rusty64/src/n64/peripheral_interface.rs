@@ -1,5 +1,20 @@
 #[derive(Default)]
-pub struct PeripheralInterface;
+pub struct PeripheralInterface {
+    //TODO check if I need all of these
+//    reg_dram_addr: u32,
+//    reg_cart_addr: u32,
+//    reg_rd_len: u32,
+//    reg_wr_len: u32,
+//    reg_status: u32,
+//    reg_bsd_dom1_lat: u32,
+//    reg_bsd_dom1_pwd: u32,
+//    reg_bsd_dom1_pgs: u32,
+//    reg_bsd_dom1_rls: u32,
+//    reg_bsd_dom2_lat: u32,
+//    reg_bsd_dom2_pwd: u32,
+//    reg_bsd_dom2_pgs: u32,
+//    reg_bsd_dom2_rls: u32,
+}
 
 impl PeripheralInterface {
     pub fn read_status_reg(&self) -> u32 {

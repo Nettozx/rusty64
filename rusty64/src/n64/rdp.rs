@@ -1,3 +1,4 @@
+#[derive(Default)]
 pub struct Rdp {
     //TODO figure out if I need all of these
     //reg_start: u32,
