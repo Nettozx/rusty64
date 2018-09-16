@@ -1,6 +1,7 @@
 use byteorder::{BigEndian, ByteOrder};
 
-use super::{AudioInterface, MipsInterface, PeripheralInterface, Pif, Rdp, Rsp, SerialInterface, VideoInterface};
+use super::{AudioInterface, MipsInterface, PeripheralInterface, Pif, Rdp, RdramInterface,
+            Rsp, SerialInterface, VideoInterface};
 use super::mem_map::{self, Addr};
 //use super::rdp::Rdp;
 
@@ -16,6 +17,7 @@ pub struct Interconnect {
     ai: AudioInterface,
     mi: MipsInterface,
     pi: PeripheralInterface,
+    ri: RdramInterface,
     si: SerialInterface,
     vi: VideoInterface,
     cart_rom: Box<[u8]>,
@@ -31,6 +33,7 @@ impl Interconnect {
             ai: AudioInterface::default(),
             mi: MipsInterface::default(),
             pi: PeripheralInterface::default(),
+            ri: RdramInterface::default(),
             si: SerialInterface::default(),
             vi: VideoInterface::default(),
             cart_rom,
@@ -43,6 +46,11 @@ impl Interconnect {
     }
 
     pub fn rsp(&self) -> &Rsp { &self.rsp }
+
+    pub fn power_on_reset(&mut self) {
+        let value = self.rsp.read_status_reg();
+        self.rsp.write_status_reg( value | 0x1);
+    }
 
     pub fn read_word(&self, addr: u32) -> u32 {
         //look at n64 memory map txt for PIF_ROM start and end
