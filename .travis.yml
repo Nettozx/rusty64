@@ -1,5 +1,9 @@
-sudo: false
 language: rust
+rust:
+  - stable
+before_script:
+  - rustc --version
+  - cargo --version
 branches:
   only:
     - master
