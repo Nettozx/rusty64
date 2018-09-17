@@ -309,6 +309,16 @@ impl Cpu {
                 //Branch On Greater Than Zero Likely - page 392
                 self.branch_likely(instr, |rs, _| rs > 0);
             },
+            J => {
+                //Jump - page 435
+                //TODO put jump target var in instr
+                unimplemented!();
+            },
+            JAL => {
+                //Jump And Link - page 436
+                //TODO
+                unimplemented!();
+            }
             LW => {
                 //Load Word - page 458
                 let base = instr.rs();
