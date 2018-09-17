@@ -10,8 +10,8 @@ enum_from_primitive! {
         //** ALU Immediate Instructions **
         ADDI     = 0b00_1000, //page 372
         ADDIU    = 0b00_1001, //page 373
-        //SLTI
-        //SLTIU
+        SLTI     = 0b00_1010, //page 506
+        SLTIU    = 0b00_1011, //page 507
         ANDI     = 0b00_1100, //page 376
         ORI      = 0b00_1101, //page 485
         XORI     = 0b00_1110, //page 543
@@ -30,12 +30,13 @@ enum_from_primitive! {
 
         //J-Type (Jump)
         //op(31-26), target(25-0)
-        //J   = 0b00_0010, //page 435
-        //JAL = 0b00_0011, //page 436
+        J        = 0b00_0010, //page 435
+        JAL      = 0b00_0011, //page 436
 
         //Load/Store Instructions
         //op(31-26), base(25-21), rt(20-16), offset(15-0)
         LW       = 0b10_0011, //page 458
+        LWU      = 0b10_0111, //page 467
         SW       = 0b10_1011, //page 515
 
         MTC0     = 0b01_0000, //page 474 TODO this is a sub instruction of COP0

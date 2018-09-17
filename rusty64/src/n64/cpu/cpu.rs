@@ -235,6 +235,20 @@ impl Cpu {
                     rs.wrapping_add(imm_sign_extended)
                 })
             },
+            SLTI => {
+                //Set On Less Than Immediate - page 506
+                self.imm_instr(instr, SignExtendResult::No,
+                               |rs, imm, _| {
+                                   if rs < imm { 1 } else { 0 }
+                               })
+            },
+            SLTIU => {
+                //Set On Less Than Immediate Unsigned - page 507
+                self.imm_instr(instr, SignExtendResult::No,
+                               |rs, _, imm_sign_extended| {
+                                   if rs < imm_sign_extended { 1 } else { 0 }
+                               })
+            },
             ANDI => {
                 //And Immediate - page 376
                 self.imm_instr(instr, SignExtendResult::No,
@@ -303,6 +317,16 @@ impl Cpu {
                 let virt_addr =
                     self.read_reg_gpr(base).wrapping_add(sign_extended_offset);
                 let mem = (self.read_word(interconnect, virt_addr) as i32) as u64;
+                self.write_reg_gpr(instr.rt(), mem);
+            },
+            LWU => {
+                //Load Word Unsigned - page 467
+                let base = instr.rs();
+                //sign extend for upper 32 bits
+                let sign_extended_offset = instr.imm_sign_extended();
+                let virt_addr =
+                    self.read_reg_gpr(base).wrapping_add(sign_extended_offset);
+                let mem = self.read_word(interconnect, virt_addr) as u64;
                 self.write_reg_gpr(instr.rt(), mem);
             },
             SW => {

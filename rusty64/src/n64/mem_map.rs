@@ -1,3 +1,11 @@
+//const RDRAM_MEMO_START: u32     = 0x0000_0000;
+//const RDRAM_MEM_LENGTH: u32     = 0x03f0_0000;
+//const RDRAM_MEM_END: u32        = RDRAM_MEM_START + RDRAM_MEM_LENGTH - 1;
+//
+//const RDRAM_REG_START: u32      = 0x03f0_0000;
+//const RDRAM_REG_LENGTH: u32     = 0x0010_0000;
+//const RDRAM_REG_END: u32        = RDRAM_REG_START + RDRAM_REG_LENGTH - 1;
+
 const PIF_ROM_START: u32        = 0x1fc0_0000;
 const PIF_ROM_LENGTH: u32       = 0x0000_07c0;
 const PIF_ROM_END: u32          = PIF_ROM_START + PIF_ROM_LENGTH - 1;
