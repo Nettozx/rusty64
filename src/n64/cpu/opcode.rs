@@ -59,7 +59,7 @@ pub enum SpecialOpcode {
         AND   = 0b10_0100, //page 375
         OR    = 0b10_0101, //page 484
         XOR   = 0b10_0110, //page 542
-        //NOR
+        NOR   = 0b10_0111, //page 483
         //** Shift Instructions **
         SLL   = 0b00_0000, //page 503, same code as NOP
         SRL   = 0b00_0010, //page 511

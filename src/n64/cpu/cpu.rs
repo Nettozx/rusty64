@@ -128,6 +128,10 @@ impl Cpu {
                     //Exclusive Or - page 542
                     self.reg_instr(instr, |rs, rt, _| { rs ^ rt })
                 },
+                NOR => {
+                    //Nor
+                    self.reg_instr(instr, |rs, rt, _ | { !(rs | rt)})
+                },
                 SLL => {
                     //Shift Left Logical - page 503
                     //same as NOP if sa==0
