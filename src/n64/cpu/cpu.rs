@@ -106,6 +106,11 @@ impl Cpu {
                     //Subtract Unsigned - page 514
                     self.reg_instr(instr, |rs, rt, _| { rs.wrapping_sub(rt) })
                 },
+                SLT => {
+                    //Set On Less Than - page 505
+                    self.reg_instr(instr, |rs, rt, _ | {
+                        if rs < rt { 1 } else { 0 } })
+                },
                 SLTU => {
                     //Set On Less Than Unsigned - page 508, ignored subtraction made no sense
                     self.reg_instr(instr, |rs, rt, _|

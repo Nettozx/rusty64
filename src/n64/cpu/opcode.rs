@@ -54,7 +54,7 @@ pub enum SpecialOpcode {
         ADDU  = 0b10_0001, //page 374
         SUB   = 0b10_0010, //page 513
         SUBU  = 0b10_0011, //page 514
-        //SLT
+        SLT   = 0b10_1010, //page 505
         SLTU  = 0b10_1011, //page 508
         AND   = 0b10_0100, //page 375
         OR    = 0b10_0101, //page 484
