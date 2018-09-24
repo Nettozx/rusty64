@@ -63,7 +63,7 @@ pub enum SpecialOpcode {
         //** Shift Instructions **
         SLL   = 0b00_0000, //page 503, same code as NOP
         SRL   = 0b00_0010, //page 511
-        //SRA
+        SRA   = 0b00_0011, //page 509
         SLLV  = 0b00_0100, //page 504
         SRLV  = 0b00_0110, //page 512
         //SRAV

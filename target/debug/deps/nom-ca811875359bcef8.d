@@ -1,0 +1,15 @@
+C:\Users\Netto\Documents\GitHub\rusty64\target\debug\deps\nom-ca811875359bcef8.rmeta: C:\Users\Netto\.cargo\registry\src\github.com-1ecc6299db9ec823\nom-1.2.4\src\lib.rs C:\Users\Netto\.cargo\registry\src\github.com-1ecc6299db9ec823\nom-1.2.4\src\util.rs C:\Users\Netto\.cargo\registry\src\github.com-1ecc6299db9ec823\nom-1.2.4\src\internal.rs C:\Users\Netto\.cargo\registry\src\github.com-1ecc6299db9ec823\nom-1.2.4\src\macros.rs C:\Users\Netto\.cargo\registry\src\github.com-1ecc6299db9ec823\nom-1.2.4\src\methods.rs C:\Users\Netto\.cargo\registry\src\github.com-1ecc6299db9ec823\nom-1.2.4\src\bytes.rs C:\Users\Netto\.cargo\registry\src\github.com-1ecc6299db9ec823\nom-1.2.4\src\bits.rs C:\Users\Netto\.cargo\registry\src\github.com-1ecc6299db9ec823\nom-1.2.4\src\nom.rs C:\Users\Netto\.cargo\registry\src\github.com-1ecc6299db9ec823\nom-1.2.4\src\character.rs C:\Users\Netto\.cargo\registry\src\github.com-1ecc6299db9ec823\nom-1.2.4\src\stream.rs C:\Users\Netto\.cargo\registry\src\github.com-1ecc6299db9ec823\nom-1.2.4\src\str.rs
+
+C:\Users\Netto\Documents\GitHub\rusty64\target\debug\deps\nom-ca811875359bcef8.d: C:\Users\Netto\.cargo\registry\src\github.com-1ecc6299db9ec823\nom-1.2.4\src\lib.rs C:\Users\Netto\.cargo\registry\src\github.com-1ecc6299db9ec823\nom-1.2.4\src\util.rs C:\Users\Netto\.cargo\registry\src\github.com-1ecc6299db9ec823\nom-1.2.4\src\internal.rs C:\Users\Netto\.cargo\registry\src\github.com-1ecc6299db9ec823\nom-1.2.4\src\macros.rs C:\Users\Netto\.cargo\registry\src\github.com-1ecc6299db9ec823\nom-1.2.4\src\methods.rs C:\Users\Netto\.cargo\registry\src\github.com-1ecc6299db9ec823\nom-1.2.4\src\bytes.rs C:\Users\Netto\.cargo\registry\src\github.com-1ecc6299db9ec823\nom-1.2.4\src\bits.rs C:\Users\Netto\.cargo\registry\src\github.com-1ecc6299db9ec823\nom-1.2.4\src\nom.rs C:\Users\Netto\.cargo\registry\src\github.com-1ecc6299db9ec823\nom-1.2.4\src\character.rs C:\Users\Netto\.cargo\registry\src\github.com-1ecc6299db9ec823\nom-1.2.4\src\stream.rs C:\Users\Netto\.cargo\registry\src\github.com-1ecc6299db9ec823\nom-1.2.4\src\str.rs
+
+C:\Users\Netto\.cargo\registry\src\github.com-1ecc6299db9ec823\nom-1.2.4\src\lib.rs:
+C:\Users\Netto\.cargo\registry\src\github.com-1ecc6299db9ec823\nom-1.2.4\src\util.rs:
+C:\Users\Netto\.cargo\registry\src\github.com-1ecc6299db9ec823\nom-1.2.4\src\internal.rs:
+C:\Users\Netto\.cargo\registry\src\github.com-1ecc6299db9ec823\nom-1.2.4\src\macros.rs:
+C:\Users\Netto\.cargo\registry\src\github.com-1ecc6299db9ec823\nom-1.2.4\src\methods.rs:
+C:\Users\Netto\.cargo\registry\src\github.com-1ecc6299db9ec823\nom-1.2.4\src\bytes.rs:
+C:\Users\Netto\.cargo\registry\src\github.com-1ecc6299db9ec823\nom-1.2.4\src\bits.rs:
+C:\Users\Netto\.cargo\registry\src\github.com-1ecc6299db9ec823\nom-1.2.4\src\nom.rs:
+C:\Users\Netto\.cargo\registry\src\github.com-1ecc6299db9ec823\nom-1.2.4\src\character.rs:
+C:\Users\Netto\.cargo\registry\src\github.com-1ecc6299db9ec823\nom-1.2.4\src\stream.rs:
+C:\Users\Netto\.cargo\registry\src\github.com-1ecc6299db9ec823\nom-1.2.4\src\str.rs:

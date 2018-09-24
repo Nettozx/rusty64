@@ -146,6 +146,12 @@ impl Cpu {
                         (rt >> sa) as u64
                     })
                 },
+                SRA => {
+                    //Shift Right Arithmetic - page 509
+                    self.reg_instr(instr, | _, rt, sa | {
+                        (rt as i64) >> sa;
+                    })
+                },
                 SLLV => {
                     //Shift Left Logical Variable - page 504
                     self.reg_instr(instr,|rs,rt, _| {
