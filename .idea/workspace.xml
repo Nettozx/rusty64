@@ -3,10 +3,17 @@
   <component name="ChangeListManager">
     <list default="true" id="2c3ec4ed-38f6-48b9-b92e-4f20ad8c13e1" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rusty64.iml" beforeDir="false" afterPath="$PROJECT_DIR$/rusty64.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/n64/cpu/cpu.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/n64/cpu/cpu.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/n64/cpu/opcode.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/n64/cpu/opcode.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/debug/rusty64.exe" beforeDir="false" afterPath="$PROJECT_DIR$/target/debug/rusty64.exe" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/debug/rusty64.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/target/debug/rusty64.pdb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/.rustc_info.json" beforeDir="false" afterPath="$PROJECT_DIR$/target/.rustc_info.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/debug/.fingerprint/rusty64-57b79e23c55bbd15/bin-rusty64-57b79e23c55bbd15" beforeDir="false" afterPath="$PROJECT_DIR$/target/debug/.fingerprint/rusty64-57b79e23c55bbd15/bin-rusty64-57b79e23c55bbd15" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/debug/.fingerprint/rusty64-57b79e23c55bbd15/bin-rusty64-57b79e23c55bbd15.json" beforeDir="false" afterPath="$PROJECT_DIR$/target/debug/.fingerprint/rusty64-57b79e23c55bbd15/bin-rusty64-57b79e23c55bbd15.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/debug/deps/rusty64-57b79e23c55bbd15.d" beforeDir="false" afterPath="$PROJECT_DIR$/target/debug/deps/rusty64-57b79e23c55bbd15.d" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/debug/incremental/rusty64-3sfkq7yo1j4d5/s-f4vpv8qdjm-rst79s-32vdksvwu5ahy/dep-graph.bin" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/debug/incremental/rusty64-3sfkq7yo1j4d5/s-f4vpv8qdjm-rst79s-32vdksvwu5ahy/query-cache.bin" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/debug/incremental/rusty64-3sfkq7yo1j4d5/s-f4vpv8qdjm-rst79s-32vdksvwu5ahy/work-products.bin" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/debug/incremental/rusty64-3sfkq7yo1j4d5/s-f4vpv8qdjm-rst79s.lock" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/debug/librusty64.d" beforeDir="false" afterPath="$PROJECT_DIR$/target/debug/librusty64.d" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -66,8 +73,21 @@
     <session id="1357913723">
       <usages-collector id="statistics.lifecycle.project">
         <counts>
+          <entry key="project.closed" value="1" />
+          <entry key="project.open.time.10" value="1" />
+          <entry key="project.open.time.34" value="1" />
           <entry key="project.open.time.4" value="1" />
-          <entry key="project.opened" value="1" />
+          <entry key="project.opened" value="3" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.file.extensions.edit">
+        <counts>
+          <entry key="rs" value="34" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.file.types.edit">
+        <counts>
+          <entry key="Rust" value="34" />
         </counts>
       </usages-collector>
     </session>
@@ -110,8 +130,8 @@
           <file pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/src/n64/cpu/opcode.rs">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="187">
-                  <caret line="65" column="37" selection-start-line="65" selection-start-column="37" selection-end-line="65" selection-end-column="37" />
+                <state relative-caret-position="323">
+                  <caret line="73" column="14" lean-forward="true" selection-start-line="73" selection-start-column="14" selection-end-line="73" selection-end-column="14" />
                 </state>
               </provider>
             </entry>
@@ -132,8 +152,8 @@
           <file pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/src/n64/cpu/cpu.rs">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="303">
-                  <caret line="151" column="54" lean-forward="true" selection-start-line="151" selection-start-column="54" selection-end-line="151" selection-end-column="54" />
+                <state relative-caret-position="-3541">
+                  <caret line="151" column="50" selection-start-line="151" selection-start-column="50" selection-end-line="151" selection-end-column="50" />
                 </state>
               </provider>
             </entry>
@@ -278,8 +298,8 @@
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
       <pane id="PackagesPane" />
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -347,6 +367,8 @@
       <workItem from="1537517468494" duration="248000" />
       <workItem from="1537517847428" duration="217000" />
       <workItem from="1537573954104" duration="5605000" />
+      <workItem from="1538199087553" duration="254000" />
+      <workItem from="1538199397181" duration="1641000" />
     </task>
     <task id="LOCAL-00001" summary="Added SLT">
       <created>1537678660731</created>
@@ -366,13 +388,12 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="198786000" />
+    <option name="totallyTimeSpent" value="200681000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-7" y="0" width="974" height="1047" extended-state="0" />
-    <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.2155361" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.22428884" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Image Layers" order="2" />
       <window_info id="Designer" order="3" />
@@ -582,15 +603,15 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/n64/cpu/opcode.rs">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="187">
-          <caret line="65" column="37" selection-start-line="65" selection-start-column="37" selection-end-line="65" selection-end-column="37" />
+        <state relative-caret-position="323">
+          <caret line="73" column="14" lean-forward="true" selection-start-line="73" selection-start-column="14" selection-end-line="73" selection-end-column="14" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/n64/cpu/cpu.rs">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="303">
-          <caret line="151" column="54" lean-forward="true" selection-start-line="151" selection-start-column="54" selection-end-line="151" selection-end-column="54" />
+        <state relative-caret-position="-3541">
+          <caret line="151" column="50" selection-start-line="151" selection-start-column="50" selection-end-line="151" selection-end-column="50" />
         </state>
       </provider>
     </entry>

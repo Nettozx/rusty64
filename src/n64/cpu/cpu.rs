@@ -149,7 +149,7 @@ impl Cpu {
                 SRA => {
                     //Shift Right Arithmetic - page 509
                     self.reg_instr(instr, | _, rt, sa | {
-                        (rt as i64) >> sa;
+                        ((rt as i64) >> sa) as u64
                     })
                 },
                 SLLV => {
